@@ -72,7 +72,16 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             onValueChange = { name = it },
             label = { Text("Name") },
             singleLine = true,
-            isError = isNameValid,
+            isError = !isNameValid,
+            supportingText = {
+                if (!isNameValid) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Name cannot be empty",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -83,7 +92,17 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             label = { Text("Weight") },
             trailingIcon = { Text("kg", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = isWeightValid,
+            isError = !isWeightValid,
+            supportingText = {
+                if (!isWeightValid) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        // TODO: REPLACE WITH PREFFERED WEIGHT SYSTEM
+                        text = "Enter your weight in kg",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -93,7 +112,16 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             onValueChange = { age = it },
             label = { Text("Age") },
             singleLine = true,
-            isError = isAgeValid,
+            isError = !isAgeValid,
+            supportingText = {
+                if (!isAgeValid) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Please enter a valid age",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -104,7 +132,16 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             label = { Text("Daily Goal") },
             trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = isDailyGoalValid,
+            isError = !isDailyGoalValid,
+            supportingText = {
+                if (!isDailyGoalValid) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Enter your daily goal in liters",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -115,7 +152,16 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             label = { Text("Default Drink Size") },
             trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = isDrinkSizeValid,
+            isError = !isDrinkSizeValid,
+            supportingText = {
+                if (!isDrinkSizeValid) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Enter your preferred drink size in liters",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
