@@ -1,7 +1,5 @@
 package com.example.hydrinker.validators
 
-import com.example.hydrinker.screens.ProfileUiState
-
 class ProfileValidator {
     companion object {
         fun validateName(name: String): Boolean = name.isNotEmpty()
