@@ -2,8 +2,17 @@ package com.example.hydrinker.screens
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,17 +28,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.doublePreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
+import com.example.hydrinker.services.ProfileService
 import com.example.hydrinker.validators.ProfileValidator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,6 +43,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "pr
 @Composable
 fun ProfileScreen(navController: NavController, context: Context = LocalContext.current) {
     var uiState by remember { mutableStateOf(ProfileUiState()) }
+    val profileService = ProfileService(context.dataStore)
 
     var nameFocused by remember { mutableStateOf(false) }
     var weightFocused by remember { mutableStateOf(false) }
@@ -45,42 +51,8 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
     var dailyGoalFocused by remember { mutableStateOf(false) }
     var defaultSizeFocused by remember { mutableStateOf(false) }
 
-    val NAME = stringPreferencesKey("name")
-    val WEIGHT = doublePreferencesKey("weight")
-    val AGE = intPreferencesKey("age")
-    val DAILY_GOAL = doublePreferencesKey("dailyGoal")
-    val DRINK_SIZE = doublePreferencesKey("drinkSize")
-
-    suspend fun saveUser(
-        context: Context,
-        name: String,
-        weight: Double,
-        age: Int,
-        dailyGoal: Double,
-        drinkSize: Double
-    ) {
-        context.dataStore.edit { profile ->
-            profile[NAME] = name
-            profile[WEIGHT] = weight
-            profile[AGE] = age
-            profile[DAILY_GOAL] = dailyGoal
-            profile[DRINK_SIZE] = drinkSize
-        }
-    }
-
-    suspend fun readProfile(context: Context): ProfileData {
-        val preferences = context.dataStore.data.first()
-        return ProfileData(
-            name = preferences[NAME] ?: "",
-            weight = preferences[WEIGHT] ?: 0.0,
-            age = preferences[AGE] ?: 0,
-            dailyGoal = preferences[DAILY_GOAL] ?: 0.0,
-            drinkSize = preferences[DRINK_SIZE] ?: 0.0
-        )
-    }
-
     LaunchedEffect(key1 = Unit) {
-        val existingProfile = readProfile(context)
+        val existingProfile = profileService.readProfile()
         uiState = ProfileUiState(
             name = TextFieldValue(existingProfile.name),
             weight = TextFieldValue(existingProfile.weight.toString()),
@@ -108,7 +80,8 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
                 .onFocusChanged { focusState ->
                     if (nameFocused && !focusState.isFocused && !focusState.isFocused) {
-                        uiState = uiState.copy(isNameValid = ProfileValidator.validateName(uiState.name.text))
+                        uiState =
+                            uiState.copy(isNameValid = ProfileValidator.validateName(uiState.name.text))
                     }
                     nameFocused = focusState.isFocused
                 },
@@ -143,7 +116,8 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
                 .onFocusChanged { focusState ->
                     if (weightFocused && !focusState.isFocused && !focusState.isFocused) {
-                        uiState = uiState.copy(isWeightValid = ProfileValidator.validateWeight(uiState.weight.text))
+                        uiState =
+                            uiState.copy(isWeightValid = ProfileValidator.validateWeight(uiState.weight.text))
                     }
                     weightFocused = focusState.isFocused
                 },
@@ -167,7 +141,8 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
                 .onFocusChanged { focusState ->
                     if (ageFocused && !focusState.isFocused && !focusState.isFocused) {
-                        uiState = uiState.copy(isAgeValid = ProfileValidator.validateAge(uiState.age.text))
+                        uiState =
+                            uiState.copy(isAgeValid = ProfileValidator.validateAge(uiState.age.text))
                     }
                     ageFocused = focusState.isFocused
                 },
@@ -193,7 +168,9 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
                 .onFocusChanged { focusState ->
                     if (dailyGoalFocused && !focusState.isFocused && !focusState.isFocused) {
-                        uiState = uiState.copy(isDailyGoalValid = ProfileValidator.validateDailyGoal(uiState.dailyGoal.text))
+                        uiState = uiState.copy(
+                            isDailyGoalValid = ProfileValidator.validateDailyGoal(uiState.dailyGoal.text)
+                        )
                     }
                     dailyGoalFocused = focusState.isFocused
                 },
@@ -219,7 +196,9 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
                 .onFocusChanged { focusState ->
                     if (defaultSizeFocused && !focusState.isFocused && !focusState.isFocused) {
-                        uiState = uiState.copy(isDrinkSizeValid = ProfileValidator.validateDrinkSize(uiState.drinkSize.text))
+                        uiState = uiState.copy(
+                            isDrinkSizeValid = ProfileValidator.validateDrinkSize(uiState.drinkSize.text)
+                        )
                     }
                     defaultSizeFocused = focusState.isFocused
                 },
@@ -230,13 +209,14 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 if (uiState.isValid) {
                     uiState = uiState.copy(isLoading = true)
                     CoroutineScope(Dispatchers.IO).launch {
-                        saveUser(
-                            context,
-                            uiState.name.text,
-                            uiState.weight.text.toDouble(),
-                            uiState.age.text.toInt(),
-                            uiState.dailyGoal.text.toDouble(),
-                            uiState.drinkSize.text.toDouble()
+                        profileService.saveProfile(
+                            ProfileData(
+                                name = uiState.name.text,
+                                weight = uiState.weight.text.toDouble(),
+                                age = uiState.age.text.toInt(),
+                                dailyGoal = uiState.dailyGoal.text.toDouble(),
+                                drinkSize = uiState.drinkSize.text.toDouble()
+                            )
                         )
                         delay(3000) // testing purposes
                         uiState = uiState.copy(isLoading = false)
