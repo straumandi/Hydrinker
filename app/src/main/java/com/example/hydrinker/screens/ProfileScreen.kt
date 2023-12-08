@@ -15,31 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.hydrinker.validators.ProfileValidator
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, context: Context = LocalContext.current) {
-    var name by remember { mutableStateOf(TextFieldValue("")) }
-    var weight by remember { mutableStateOf(TextFieldValue("")) }
-    var dailyGoal by remember { mutableStateOf(TextFieldValue("")) }
-    var age by remember { mutableStateOf(TextFieldValue("")) }
-    var drinkSize by remember { mutableStateOf(TextFieldValue("")) }
-
-    var isNameValid by remember { mutableStateOf(true) }
-    var isWeightValid by remember { mutableStateOf(true) }
-    var isAgeValid by remember { mutableStateOf(true) }
-    var isDailyGoalValid by remember { mutableStateOf(true) }
-    var isDrinkSizeValid by remember { mutableStateOf(true) }
-
-    fun validateFields(name: String, weight: String, age: String, dailyGoal: String, drinkSize: String): Boolean {
-        isNameValid = name.isNotEmpty()
-        isWeightValid = weight.isNotEmpty() && weight.toDoubleOrNull() != null
-        isAgeValid = age.isNotEmpty() && age.toIntOrNull() != null
-        isDailyGoalValid = dailyGoal.isNotEmpty() && dailyGoal.toDoubleOrNull() != null
-        isDrinkSizeValid = drinkSize.isNotEmpty() && drinkSize.toDoubleOrNull() != null
-
-        return isNameValid && isWeightValid && isAgeValid && isDailyGoalValid && isDrinkSizeValid
-    }
+    var uiState by remember { mutableStateOf(ProfileUiState()) }
 
     fun saveUser(
         context: Context,
@@ -68,13 +48,12 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         verticalArrangement = Arrangement.Top
     ) {
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") },
+            value = uiState.name,
+            onValueChange = { uiState = uiState.copy(name = it) },            label = { Text("Name") },
             singleLine = true,
-            isError = !isNameValid,
+            isError = !uiState.isNameValid,
             supportingText = {
-                if (!isNameValid) {
+                if (!uiState.isNameValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Name cannot be empty",
@@ -87,14 +66,13 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
         )
         OutlinedTextField(
-            value = weight,
-            onValueChange = { weight = it },
-            label = { Text("Weight") },
+            value = uiState.weight,
+            onValueChange = { uiState = uiState.copy(weight = it) },            label = { Text("Weight") },
             trailingIcon = { Text("kg", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = !isWeightValid,
+            isError = !uiState.isWeightValid,
             supportingText = {
-                if (!isWeightValid) {
+                if (!uiState.isWeightValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         // TODO: REPLACE WITH PREFFERED WEIGHT SYSTEM
@@ -108,13 +86,12 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
         )
         OutlinedTextField(
-            value = age,
-            onValueChange = { age = it },
-            label = { Text("Age") },
+            value = uiState.age,
+            onValueChange = { uiState = uiState.copy(age = it) },            label = { Text("Age") },
             singleLine = true,
-            isError = !isAgeValid,
+            isError = !uiState.isAgeValid,
             supportingText = {
-                if (!isAgeValid) {
+                if (!uiState.isAgeValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Please enter a valid age",
@@ -127,14 +104,13 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
         )
         OutlinedTextField(
-            value = dailyGoal,
-            onValueChange = { dailyGoal = it },
-            label = { Text("Daily Goal") },
+            value = uiState.dailyGoal,
+            onValueChange = { uiState = uiState.copy(dailyGoal = it) },            label = { Text("Daily Goal") },
             trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = !isDailyGoalValid,
+            isError = !uiState.isDailyGoalValid,
             supportingText = {
-                if (!isDailyGoalValid) {
+                if (!uiState.isDailyGoalValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Enter your daily goal in liters",
@@ -147,14 +123,13 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 .padding(vertical = 8.dp)
         )
         OutlinedTextField(
-            value = drinkSize,
-            onValueChange = { drinkSize = it },
-            label = { Text("Default Drink Size") },
+            value = uiState.drinkSize,
+            onValueChange = { uiState = uiState.copy(drinkSize = it) },            label = { Text("Default Drink Size") },
             trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
-            isError = !isDrinkSizeValid,
+            isError = !uiState.isDrinkSizeValid,
             supportingText = {
-                if (!isDrinkSizeValid) {
+                if (!uiState.isDrinkSizeValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Enter your preferred drink size in liters",
@@ -168,16 +143,16 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         )
         Button(
             onClick = {
-                val isValid = validateFields(name.text, weight.text, age.text, dailyGoal.text, drinkSize.text)
-                if (isValid)
+                uiState = uiState.validate()
+                if (uiState.isValid)
                  {
                     saveUser(
                         context,
-                        name.text,
-                        weight.text,
-                        age.text,
-                        dailyGoal.text,
-                        drinkSize.text
+                        uiState.name.text,
+                        uiState.weight.text,
+                        uiState.age.text,
+                        uiState.dailyGoal.text,
+                        uiState.drinkSize.text
                     )
                     Toast.makeText(context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
                 } else {
@@ -195,5 +170,31 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             Text("Save Profile")
         }
     }
-
 }
+
+data class ProfileUiState(
+    val name: TextFieldValue = TextFieldValue(""),
+    val weight: TextFieldValue = TextFieldValue(""),
+    val age: TextFieldValue = TextFieldValue(""),
+    val dailyGoal: TextFieldValue = TextFieldValue(""),
+    val drinkSize: TextFieldValue = TextFieldValue(""),
+    val isNameValid: Boolean = true,
+    val isWeightValid: Boolean = true,
+    val isAgeValid: Boolean = true,
+    val isDailyGoalValid: Boolean = true,
+    val isDrinkSizeValid: Boolean = true
+) {
+    fun validate(): ProfileUiState {
+        return this.copy(
+            isNameValid = ProfileValidator.validateName(name.text),
+            isWeightValid = ProfileValidator.validateWeight(weight.text),
+            isAgeValid = ProfileValidator.validateAge(age.text),
+            isDailyGoalValid = ProfileValidator.validateDailyGoal(dailyGoal.text),
+            isDrinkSizeValid = ProfileValidator.validateDrinkSize(drinkSize.text)
+        )
+    }
+
+    val isValid: Boolean
+        get() = isNameValid && isWeightValid && isAgeValid && isDailyGoalValid && isDrinkSizeValid
+}
+
