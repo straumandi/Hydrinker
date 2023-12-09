@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,6 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.graphics.Color
 
+import androidx.compose.material3.*
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.navigation.compose.rememberNavController
+import com.example.hydrinker.Screens
+import com.example.hydrinker.ui.theme.HydrinkerTheme
+
+
 @Composable
 fun HomeScreen(navController: NavController) {
 
@@ -56,13 +64,13 @@ fun HomeScreen(navController: NavController) {
                 containerColor = Color(0xFF98E0FF),
                 contentColor = Color(0xFF000000),
             ),
-            shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp, bottomEnd = 50.dp, bottomStart = 50.dp),
-            onClick = { /*TODO*/ }
+            shape = CircleShape,
+            onClick = {}
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_profile),
                 contentDescription = "Testing",
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -88,12 +96,12 @@ fun HomeScreen(navController: NavController) {
                 contentColor = Color(0xFF000000),
             ),
             shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp, bottomEnd = 50.dp, bottomStart = 50.dp),
-            onClick = { /*TODO*/ }
+            onClick = {}
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addsrd),
                 contentDescription = "Testing",
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -109,7 +117,7 @@ fun HomeScreen(navController: NavController) {
                 contentColor = Color(0xFF000000),
             ),
             shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp, bottomEnd = 50.dp, bottomStart = 50.dp),
-            onClick = { /*TODO*/ }
+            onClick = {}
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addcstm),
@@ -119,4 +127,16 @@ fun HomeScreen(navController: NavController) {
         }
 
     }
+}
+@Composable
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFbddbe3,
+    device = Devices.DEFAULT,
+    widthDp = 360,
+    heightDp = 640
+)
+fun HomeScreenPreview() {
+    val navController = rememberNavController()
+    HomeScreen(navController)
 }
