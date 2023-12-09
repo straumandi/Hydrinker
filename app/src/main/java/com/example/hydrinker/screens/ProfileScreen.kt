@@ -3,19 +3,15 @@ package com.example.hydrinker.screens
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,10 +39,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "profile")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
 @Composable
 fun ProfileScreen(navController: NavController, context: Context = LocalContext.current) {
+    // 'remember' is a Compose function to retain state across recompositions
     var uiState by remember { mutableStateOf(ProfileUiState()) }
     val profileService = ProfileService(context.dataStore)
 
@@ -56,6 +53,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
     var dailyGoalFocused by remember { mutableStateOf(false) }
     var defaultSizeFocused by remember { mutableStateOf(false) }
 
+    // LaunchedEffect is a Compose function that runs a side-effect once
     LaunchedEffect(key1 = Unit) {
         val existingProfile = profileService.readProfile()
         uiState = ProfileUiState(
@@ -67,6 +65,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         )
     }
 
+    // These are various composables that are used to build the screen
     ScreenHeader(headerText = "Profile")
     Column(
         modifier = Modifier
@@ -212,7 +211,13 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         Button(
             onClick = {
                 uiState = uiState.validateState()
-                if (uiState.isValid) {
+                if (!uiState.isValid) {
+                    Toast.makeText(
+                        context,
+                        "Please fill out the form correctly",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
                     uiState = uiState.copy(isLoading = true)
                     CoroutineScope(Dispatchers.IO).launch {
                         profileService.saveProfile(
@@ -224,7 +229,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                                 drinkSize = uiState.drinkSize.text.toDouble()
                             )
                         )
-                        delay(3000) // testing purposes
+                        delay(1500) // delay for testing purposes
                         uiState = uiState.copy(isLoading = false)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(
@@ -234,12 +239,6 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                             ).show()
                         }
                     }
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Please fill out the form correctly",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             },
             modifier = Modifier
@@ -256,6 +255,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
 
 }
 
+// Data classes are a Kotlin feature providing a concise way to create classes that just hold data
 data class ProfileUiState(
     val name: TextFieldValue = TextFieldValue(""),
     val weight: TextFieldValue = TextFieldValue(""),
@@ -270,6 +270,8 @@ data class ProfileUiState(
     val isLoading: Boolean = false
 ) {
     fun validateState(): ProfileUiState {
+
+        // 'copy' is a special function provided by Kotlin data classes to create a new instance with modified properties
         return this.copy(
             isNameValid = ProfileValidator.validateName(name.text),
             isWeightValid = ProfileValidator.validateWeight(weight.text),
@@ -279,6 +281,7 @@ data class ProfileUiState(
         )
     }
 
+    // Custom getter in Kotlin to compute a value directly in the property declaration
     val isValid: Boolean
         get() = isNameValid && isWeightValid && isAgeValid && isDailyGoalValid && isDrinkSizeValid
 }
