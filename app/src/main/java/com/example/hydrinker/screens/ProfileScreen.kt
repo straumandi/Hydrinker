@@ -3,15 +3,19 @@ package com.example.hydrinker.screens
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +34,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
+import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.ProfileService
 import com.example.hydrinker.validators.ProfileValidator
 import kotlinx.coroutines.CoroutineScope
@@ -62,10 +67,11 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         )
     }
 
+    ScreenHeader(headerText = "Profile")
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp),
+            .padding(top = 60.dp, start = 15.dp, end = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -247,6 +253,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             }
         }
     }
+
 }
 
 data class ProfileUiState(
