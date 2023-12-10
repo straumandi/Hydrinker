@@ -51,10 +51,9 @@ fun ScoreScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
+            .padding(horizontal = 15.dp, vertical = 15.dp)
     ) {
+        // Profile button at the top left
         Button(
             modifier = Modifier.size(80.dp,80.dp),
             border = BorderStroke(1.dp, color = Color(0xFF000000)),
@@ -69,12 +68,57 @@ fun ScoreScreen(navController: NavController) {
             onClick = {}
         ) {
             Image(
-                painter = painterResource(id = R.drawable.btn_home_profile),
+                painter = painterResource(id = R.drawable.btn_tier),
                 contentDescription = "Testing",
                 modifier = Modifier.fillMaxWidth()
             )
         }
+
+
+        Button(
+            modifier = Modifier.size(80.dp,80.dp),
+            border = BorderStroke(1.dp, color = Color(0xFF000000)),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 30.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF98E0FF),
+                contentColor = Color(0xFF000000),
+            ),
+            shape = CircleShape,
+            onClick = {}
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.btn_score),
+                contentDescription = "Testing",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+        }
+
+        Button(
+            modifier = Modifier.size(80.dp,80.dp),
+            border = BorderStroke(1.dp, color = Color(0xFF000000)),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 30.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF98E0FF),
+                contentColor = Color(0xFF000000),
+            ),
+            shape = CircleShape,
+            onClick = {}
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.btn_streak),
+                contentDescription = "Testing",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+        }
+
     }
+
 }
 
 @Composable
