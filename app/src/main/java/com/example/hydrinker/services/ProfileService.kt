@@ -2,6 +2,7 @@ package com.example.hydrinker.services
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -16,6 +17,9 @@ class ProfileService(private val dataStore: DataStore<Preferences>) {
     private val AGE = intPreferencesKey("age")
     private val DAILY_GOAL = doublePreferencesKey("dailyGoal")
     private val DRINK_SIZE = doublePreferencesKey("drinkSize")
+    private val NOTIFICATIONS_ON = booleanPreferencesKey("notificationsOn")
+    private val UNITS = stringPreferencesKey("units")
+    private val EMAIL = stringPreferencesKey("email")
 
     suspend fun saveProfile(profileData: ProfileData) {
         dataStore.edit { profile ->
