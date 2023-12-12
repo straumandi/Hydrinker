@@ -54,21 +54,12 @@ fun HomeScreen(navController: NavController) {
             .padding(horizontal = 15.dp, vertical = 15.dp)
     ) {
         // Profile button at the top left
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
+        IconButton(
+            modifier = Modifier.size(120.dp,120.dp),
             onClick = {}
         ) {
             Image(
-                painter = painterResource(id = R.drawable.btn_home_profile),
+                painter = painterResource(id = R.drawable.btn_blue),
                 contentDescription = "Testing",
                 modifier = Modifier.fillMaxWidth()
             )
