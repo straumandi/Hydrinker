@@ -59,7 +59,7 @@ fun HomeScreen(navController: NavController) {
             onClick = {}
         ) {
             Image(
-                painter = painterResource(id = R.drawable.btn_blue),
+                painter = painterResource(id = R.drawable.btn_home_profile),
                 contentDescription = "Testing",
                 modifier = Modifier.fillMaxWidth()
             )
