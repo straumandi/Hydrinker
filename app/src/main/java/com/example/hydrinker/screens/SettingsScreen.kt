@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.models.MeasurementUnit
-import com.example.hydrinker.services.NotificationService
 import com.example.hydrinker.services.SettingsService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

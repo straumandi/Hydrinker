@@ -13,5 +13,4 @@ object PreferencesKeys {
     val DRINK_SIZE = doublePreferencesKey("drinkSize")
     val NOTIFICATIONS_ON = booleanPreferencesKey("notificationsOn")
     val UNITS = stringPreferencesKey("units")
-    val EMAIL = stringPreferencesKey("email")
 }

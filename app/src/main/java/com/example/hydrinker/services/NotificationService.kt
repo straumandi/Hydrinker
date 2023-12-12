@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.hydrinker.Hydrinker
 import com.example.hydrinker.R
 import kotlinx.coroutines.flow.first
 import kotlin.random.Random
@@ -37,7 +36,10 @@ class NotificationService(private val context: Context) {
         if (!isAlarmSet()) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, HourlyAlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, 0, intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
 
             val startTime = System.currentTimeMillis() // Start at current time
             val intervalTime = (60 * 60 * 1000).toLong() // 60 minutes in milliseconds

@@ -1,12 +1,10 @@
 package com.example.hydrinker.services
 
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.example.hydrinker.models.MeasurementUnit
-import com.example.hydrinker.screens.ProfileData
 import com.example.hydrinker.screens.SettingsData
 import kotlinx.coroutines.flow.first
 
