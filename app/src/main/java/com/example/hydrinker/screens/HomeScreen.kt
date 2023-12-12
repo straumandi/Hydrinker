@@ -6,7 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -39,10 +43,12 @@ import androidx.navigation.NavController
 import androidx.compose.ui.graphics.Color
 
 import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.Screens
 import com.example.hydrinker.ui.theme.HydrinkerTheme
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -50,43 +56,72 @@ fun HomeScreen(navController: NavController) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 15.dp, vertical = 15.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+Row (
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceAround
+){
+    IconButton(
+        modifier = Modifier
+            .size(120.dp, 120.dp),
+        onClick = {}
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.btn_home_profile),
+            contentDescription = "Testing",
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+
+    IconButton(
+        modifier = Modifier
+            .size(120.dp, 120.dp)
+            .align(Alignment.CenterVertically),
+        onClick = {}
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.btn_home_menu),
+            contentDescription = "Testing",
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
         // Profile button at the top left
+
+
+        // Logo beneath the profile button
+        Spacer(modifier = Modifier.height(16.dp))
+
         IconButton(
-            modifier = Modifier.size(120.dp,120.dp),
-            onClick = {}
+            modifier = Modifier
+                .size(300.dp, 300.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = {},
+
+
         ) {
             Image(
-                painter = painterResource(id = R.drawable.btn_home_profile),
+                painter = painterResource(id = R.drawable.btn_home_score),
                 contentDescription = "Testing",
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
-        // Logo beneath the profile button
-        Spacer(modifier = Modifier.height(16.dp))
-        Image(
-            painter = painterResource(id = R.drawable.btn_home_score), contentDescription = null)
-        // Insert your logo here
 
-        // Add Cup button at the bottom left
-        Spacer(modifier = Modifier.weight(1f))
 
 
         //Cup standard button
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp, bottomEnd = 50.dp, bottomStart = 50.dp),
+        IconButton(
+
+            modifier = Modifier
+                .size(120.dp, 120.dp)
+                .align(Alignment.CenterHorizontally),
             onClick = {}
         ) {
             Image(
@@ -97,23 +132,14 @@ fun HomeScreen(navController: NavController) {
         }
 
         //Cup custom button
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp, bottomEnd = 50.dp, bottomStart = 50.dp),
+        IconButton(
+            modifier = Modifier.size(50.dp,50.dp),
             onClick = {}
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addcstm),
                 contentDescription = "Testing",
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
