@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.example.hydrinker.models.HydrationData
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -61,14 +60,23 @@ fun HistoryScreen(navController: NavController, entries: List<HydrationData>) {
 // Helper function to format the entries for ChartEntryModelProducer
 private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
     val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
-    print("referenceDate: $referenceDate")
-    return entries.map { entry ->
+
+    // Use a map to accumulate amounts for each date
+    val accumulatedAmounts = mutableMapOf<Long, Float>()
+
+    entries.forEach { entry ->
+        val day = TimeUnit.MILLISECONDS.toDays(entry.date.time - referenceDate)
+        accumulatedAmounts[day] = (accumulatedAmounts[day] ?: 0f) + entry.amount.toFloat()
+    }
+
+    return accumulatedAmounts.map { (day, accumulatedAmount) ->
         entryOf(
-            x = TimeUnit.MILLISECONDS.toDays(entry.date.time - referenceDate).toFloat(), // Convert to days
-            y = entry.amount.toFloat(), // Y-axis represents the water amount
+            x = day.toFloat(), // X-axis represents the date in days
+            y = accumulatedAmount, // Y-axis represents the accumulated water amount
         )
     }
 }
+
 
 @Composable
 private fun createStartAxis(): AxisRenderer<AxisPosition.Vertical.Start> {

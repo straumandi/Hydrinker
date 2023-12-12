@@ -53,7 +53,7 @@ fun BottomNavigationBar() {
             amount = 300.0
         ),
         HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-03")!!,
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
             amount = 150.0
         ),
         HydrationData(
