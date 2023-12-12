@@ -23,5 +23,5 @@ enum class ActivityLevel {
 }
 
 enum class MeasurementUnit {
-    MILLILITERS, OUNCES, UNKNOWN
+    METRIC, IMPERIAL, UNKNOWN
 }
