@@ -25,11 +25,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.ProfileService
 import com.example.hydrinker.validators.ProfileValidator
@@ -294,3 +297,16 @@ data class ProfileData(
     val drinkSize: Double
 )
 
+
+@Composable
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFbddbe3,
+    device = Devices.DEFAULT,
+    widthDp = 360,
+    heightDp = 640
+)
+fun ProfileScreenPreview() {
+    val navController = rememberNavController()
+    ProfileScreen(navController)
+}
