@@ -49,7 +49,7 @@ fun HomeScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-// Menu Button top right
+            // Menu Button top right
             IconButton(
                 modifier = Modifier
                     .size(120.dp, 120.dp)
@@ -67,13 +67,12 @@ fun HomeScreen(navController: NavController) {
         // Logo beneath the profile button
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Score Button Middle of screen
+        // Big Score Button in the middle of screen
         IconButton(
             modifier = Modifier
                 .size(300.dp, 300.dp)
                 .align(Alignment.CenterHorizontally),
             onClick = {},
-
 
             ) {
             Image(
@@ -82,7 +81,6 @@ fun HomeScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
 
         //Cup standard button bottom middle
         IconButton(
