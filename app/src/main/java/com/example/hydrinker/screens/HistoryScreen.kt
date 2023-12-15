@@ -77,6 +77,35 @@ private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> 
     }
 }
 
+/*
+* here is the code for the new date format from our database
+* we will probably need a state in here to update the ui when the local db has changes
+*
+private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
+    val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
+    val referenceDay = LocalDate.ofEpochDay(referenceDate / (24 * 60 * 60 * 1000)).toEpochDay()
+
+    // Use a map to accumulate amounts for each date
+    val accumulatedAmounts = mutableMapOf<LocalDate, Float>()
+
+    // Parse the date string from the HydrationData object using DateTimeFormatter
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+    entries.forEach { entry ->
+        val parsedDate: LocalDate = LocalDateTime.parse(entry.date.toString(), dateTimeFormatter).toLocalDate()
+
+        accumulatedAmounts[parsedDate] = (accumulatedAmounts[parsedDate] ?: 0f) + entry.amountInMillilitres.toFloat()
+    }
+
+    return accumulatedAmounts.map { (parsedDate, accumulatedAmount) ->
+        entryOf(
+            x = ChronoUnit.DAYS.between(LocalDate.ofEpochDay(referenceDay), parsedDate).toFloat(),
+            y = accumulatedAmount
+        )
+    }
+}
+*/
+
+
 
 @Composable
 private fun createStartAxis(): AxisRenderer<AxisPosition.Vertical.Start> {

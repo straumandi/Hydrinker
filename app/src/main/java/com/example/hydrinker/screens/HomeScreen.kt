@@ -112,13 +112,22 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
                 contentDescription = "Big Blue Button",
                 modifier = Modifier.fillMaxWidth()
             )
-            Text(
-                text = "Placeholder",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                color = Color.Black,
-                fontSize = 42.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-            )
+            Column {
+                Text(
+                    text = "Score",
+                    modifier = Modifier.align(Alignment.Start),
+                    color = Color.Black,
+                    fontSize = 42.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+                Text(
+                    text = "69",
+                    modifier = Modifier.align(Alignment.End),
+                    color = Color.Black,
+                    fontSize = 84.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+            }
         }
 
 
@@ -215,7 +224,6 @@ fun DrinkInputDialog(
 
 
 fun isDrinkSizeInvalid(drinkSize: String): Boolean {
-    println(drinkSize)
     return try {
         drinkSize.toInt()
         false

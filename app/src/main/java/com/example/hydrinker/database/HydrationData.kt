@@ -21,5 +21,4 @@ interface HydrationDao {
 
     @Query("SELECT * FROM hydration_data ORDER BY date DESC")
     fun getAllHydrationData(): List<HydrationData>
-
 }

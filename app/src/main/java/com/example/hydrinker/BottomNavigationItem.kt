@@ -40,15 +40,14 @@ data class BottomNavigationItem(
                 selectedIcon = Icons.Filled.AccountCircle,
                 unselectedIcon = Icons.Outlined.AccountCircle,
                 route = Screens.Profile.route,
-                hasNews = true,
+                hasNews = false,
             ),
             BottomNavigationItem(
                 title = "Score",
                 selectedIcon = Icons.Filled.Star,
                 unselectedIcon = Icons.Outlined.Star,
                 route = Screens.Score.route,
-                hasNews = true,
-                badgeCount = 3
+                hasNews = false
             ),
             BottomNavigationItem(
                 title = "History",
@@ -62,7 +61,7 @@ data class BottomNavigationItem(
                 selectedIcon = Icons.Filled.Settings,
                 unselectedIcon = Icons.Outlined.Settings,
                 route = Screens.Settings.route,
-                hasNews = true,
+                hasNews = false,
             )
         )
     }
