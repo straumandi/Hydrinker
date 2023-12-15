@@ -1,21 +1,14 @@
 package com.example.hydrinker
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,18 +16,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hydrinker.models.HydrationData
 import com.example.hydrinker.screens.HistoryScreen
 import com.example.hydrinker.screens.HomeScreen
 import com.example.hydrinker.screens.ProfileScreen
 import com.example.hydrinker.screens.ScoreScreen
 import com.example.hydrinker.screens.SettingsScreen
-import com.example.hydrinker.ui.theme.HydrinkerTheme
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,6 +41,34 @@ fun BottomNavigationBar() {
      * we can get the instance of the navController
      */
     val navController = rememberNavController()
+
+    // Sample entries data, replace this with actual drinking entry data
+    val entries = listOf(
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-01")!!,
+            amount = 200.0
+        ),
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
+            amount = 300.0
+        ),
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
+            amount = 150.0
+        ),
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-04")!!,
+            amount = 250.0
+        ),
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-05")!!,
+            amount = 350.0
+        ),
+        HydrationData(
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-06")!!,
+            amount = 250.0
+        )
+    )
 
     // scaffold to hold our bottom navigation Bar
     Scaffold(
@@ -114,7 +135,7 @@ fun BottomNavigationBar() {
                 ScoreScreen(navController = navController)
             }
             composable(Screens.History.route) {
-                HistoryScreen(navController = navController)
+                HistoryScreen(navController = navController, entries = entries)
             }
             composable(Screens.Settings.route) {
                 SettingsScreen(navController = navController)
