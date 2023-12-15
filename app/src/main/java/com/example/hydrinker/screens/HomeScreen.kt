@@ -1,5 +1,6 @@
 package com.example.hydrinker.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,25 +10,56 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
-import com.example.hydrinker.R
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.navigation.compose.rememberNavController
-
+import com.example.hydrinker.R
+import com.example.hydrinker.services.ProfileService
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, context: Context = LocalContext.current) {
+    var showDialog by remember { mutableStateOf(false) }
+    var defaultDrinkSize by remember { mutableStateOf("") }
+    var profileService = ProfileService(context.dataStore)
+
+    LaunchedEffect(key1 = Unit) {
+        defaultDrinkSize = profileService.readProfile().drinkSize.toString()
+    }
+
+
+    if (showDialog) {
+        DrinkInputDialog(
+            onDismissRequest = { showDialog = false },
+            onConfirm = { size ->
+                println(size)
+            },
+            defaultDrinkSize = defaultDrinkSize,
+        )
+    }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -38,27 +70,21 @@ fun HomeScreen(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             // Profile Button top left
-            IconButton(
-                modifier = Modifier
-                    .size(120.dp, 120.dp),
-                onClick = {}
-            ) {
+            IconButton(modifier = Modifier.size(120.dp, 120.dp), onClick = {}) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_profile),
-                    contentDescription = "Testing",
+                    contentDescription = "A profile button",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             // Menu Button top right
-            IconButton(
-                modifier = Modifier
-                    .size(120.dp, 120.dp)
-                    .align(Alignment.CenterVertically),
-                onClick = {}
-            ) {
+            IconButton(modifier = Modifier
+                .size(120.dp, 120.dp)
+                .align(Alignment.CenterVertically),
+                onClick = {}) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_menu),
-                    contentDescription = "Testing",
+                    contentDescription = "A menu button",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -72,15 +98,23 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .size(300.dp, 300.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = {},
+            onClick = { showDialog = true },
 
             ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_score),
-                contentDescription = "Testing",
+                contentDescription = "Big Blue Button",
                 modifier = Modifier.fillMaxWidth()
             )
+            Text(
+                text = "Placeholder",
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = Color.Black,
+                fontSize = 42.sp,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            )
         }
+
 
         //Cup standard button bottom middle
         IconButton(
@@ -88,8 +122,7 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .size(120.dp, 120.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = {}
-        ) {
+            onClick = {}) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addsrd),
                 contentDescription = "Testing",
@@ -98,10 +131,7 @@ fun HomeScreen(navController: NavController) {
         }
 
         //Cup custom button bottom middle
-        IconButton(
-            modifier = Modifier.size(50.dp, 50.dp),
-            onClick = {}
-        ) {
+        IconButton(modifier = Modifier.size(50.dp, 50.dp), onClick = {}) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addcstm),
                 contentDescription = "Testing",
@@ -124,3 +154,64 @@ fun HomeScreenPreview() {
     val navController = rememberNavController()
     HomeScreen(navController)
 }
+
+@Composable
+fun DrinkInputDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: (Double) -> Unit,
+    defaultDrinkSize: String?
+) {
+    var drinkSize by remember { mutableStateOf(defaultDrinkSize ?: "") }
+    var showError by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = { onDismissRequest() },
+        title = { Text("Enter Drink Size") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = drinkSize,
+                    onValueChange = {
+                        drinkSize = it
+                        showError = isDrinkSizeInvalid(it)
+                    },
+                    isError = showError,
+                    label = { Text("Drink Size") },
+                    placeholder = { Text("e.g. 250") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                if (showError) {
+                    Text("Invalid input. Please enter a number.", color = Color.Red)
+                }
+            }
+        },
+        dismissButton = {
+            Button(onClick = { onDismissRequest() }) {
+                Text("Cancel")
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (!isDrinkSizeInvalid(drinkSize)) {
+                        onConfirm(drinkSize.toDouble())
+                        onDismissRequest()
+                    }
+                },
+            ) {
+                Text("Confirm")
+            }
+        }
+    )
+}
+
+
+fun isDrinkSizeInvalid(drinkSize: String): Boolean {
+    return try {
+        drinkSize.toDouble()
+        false
+    } catch (e: NumberFormatException) {
+        true
+    }
+}
+
