@@ -32,30 +32,31 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.R
+import com.example.hydrinker.services.HydrationViewModel
+import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
 
 @Composable
 fun HomeScreen(navController: NavController, context: Context = LocalContext.current) {
     var showDialog by remember { mutableStateOf(false) }
     var defaultDrinkSize by remember { mutableStateOf("") }
-    var profileService = ProfileService(context.dataStore)
+    val profileService = ProfileService(context.dataStore)
+
+    val viewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
 
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
     }
 
-
     if (showDialog) {
-        DrinkInputDialog(
-            onDismissRequest = { showDialog = false },
-            onConfirm = { size ->
-                println(size)
-            },
-            defaultDrinkSize = defaultDrinkSize,
-        )
+        DrinkInputDialog(onDismissRequest = { showDialog = false }, onConfirm = { size ->
+            viewModel.addDrink(size)
+            showDialog = false
+        })
     }
 
     Column(
@@ -70,7 +71,9 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             // Profile Button top left
-            IconButton(modifier = Modifier.size(120.dp, 120.dp), onClick = {}) {
+            IconButton(modifier = Modifier.size(120.dp, 120.dp), onClick = {
+                navController.navigate("profile_route")
+            }) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_profile),
                     contentDescription = "A profile button",
@@ -81,7 +84,9 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             IconButton(modifier = Modifier
                 .size(120.dp, 120.dp)
                 .align(Alignment.CenterVertically),
-                onClick = {}) {
+                onClick = {
+                    navController.navigate("score_route")
+                }) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_menu),
                     contentDescription = "A menu button",
@@ -117,12 +122,16 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
 
 
         //Cup standard button bottom middle
-        IconButton(
-
-            modifier = Modifier
-                .size(120.dp, 120.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = {}) {
+        IconButton(modifier = Modifier
+            .size(120.dp, 120.dp)
+            .align(Alignment.CenterHorizontally),
+            onClick = {
+                if (isDrinkSizeInvalid(defaultDrinkSize)) {
+                    // TODO: add to hydration data list
+                } else {
+                    showDialog = true
+                }
+            }) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addsrd),
                 contentDescription = "Testing",
@@ -159,13 +168,11 @@ fun HomeScreenPreview() {
 fun DrinkInputDialog(
     onDismissRequest: () -> Unit,
     onConfirm: (Double) -> Unit,
-    defaultDrinkSize: String?
 ) {
-    var drinkSize by remember { mutableStateOf(defaultDrinkSize ?: "") }
+    var drinkSize by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
 
-    AlertDialog(
-        onDismissRequest = { onDismissRequest() },
+    AlertDialog(onDismissRequest = { onDismissRequest() },
         title = { Text("Enter Drink Size") },
         text = {
             Column {
@@ -195,14 +202,12 @@ fun DrinkInputDialog(
                 onClick = {
                     if (!isDrinkSizeInvalid(drinkSize)) {
                         onConfirm(drinkSize.toDouble())
-                        onDismissRequest()
                     }
                 },
             ) {
                 Text("Confirm")
             }
-        }
-    )
+        })
 }
 
 
