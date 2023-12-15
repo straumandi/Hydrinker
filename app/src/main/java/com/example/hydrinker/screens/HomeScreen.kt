@@ -135,16 +135,18 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             }) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addsrd),
-                contentDescription = "Testing",
+                contentDescription = "Standard drink size button",
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
         //Cup custom button bottom middle
-        IconButton(modifier = Modifier.size(50.dp, 50.dp), onClick = {}) {
+        IconButton(modifier = Modifier.size(50.dp, 50.dp), onClick = {
+            showDialog = true
+        }) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_addcstm),
-                contentDescription = "Testing",
+                contentDescription = "Plus Button",
                 modifier = Modifier.fillMaxWidth()
             )
         }
