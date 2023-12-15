@@ -66,7 +66,7 @@ private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> 
 
     entries.forEach { entry ->
         val day = TimeUnit.MILLISECONDS.toDays(entry.date.time - referenceDate)
-        accumulatedAmounts[day] = (accumulatedAmounts[day] ?: 0f) + entry.amount.toFloat()
+        accumulatedAmounts[day] = (accumulatedAmounts[day] ?: 0f) + entry.amountInMillilitres.toFloat()
     }
 
     return accumulatedAmounts.map { (day, accumulatedAmount) ->

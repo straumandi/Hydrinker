@@ -1,6 +1,5 @@
 package com.example.hydrinker.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -12,7 +11,7 @@ import java.util.Date
 data class HydrationData(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val date: Date,
-    val amount: Double
+    val amountInMillilitres: Int
 )
 
 @Dao

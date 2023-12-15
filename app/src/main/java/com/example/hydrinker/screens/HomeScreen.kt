@@ -46,15 +46,16 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
     var defaultDrinkSize by remember { mutableStateOf("") }
     val profileService = ProfileService(context.dataStore)
 
-    val viewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
+    val hydrationViewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
 
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
+        hydrationViewModel.getHydrationData()
     }
 
     if (showDialog) {
         DrinkInputDialog(onDismissRequest = { showDialog = false }, onConfirm = { size ->
-            viewModel.addDrink(size)
+            hydrationViewModel.addDrink(size)
             showDialog = false
         })
     }
@@ -103,7 +104,7 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             modifier = Modifier
                 .size(300.dp, 300.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = { showDialog = true },
+            onClick = { },
 
             ) {
             Image(
@@ -126,8 +127,8 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             .size(120.dp, 120.dp)
             .align(Alignment.CenterHorizontally),
             onClick = {
-                if (isDrinkSizeInvalid(defaultDrinkSize)) {
-                    // TODO: add to hydration data list
+                if (!isDrinkSizeInvalid(defaultDrinkSize)) {
+                    hydrationViewModel.addDrink(defaultDrinkSize.toInt())
                 } else {
                     showDialog = true
                 }
@@ -167,7 +168,7 @@ fun HomeScreenPreview() {
 @Composable
 fun DrinkInputDialog(
     onDismissRequest: () -> Unit,
-    onConfirm: (Double) -> Unit,
+    onConfirm: (Int) -> Unit,
 ) {
     var drinkSize by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
@@ -201,7 +202,7 @@ fun DrinkInputDialog(
             Button(
                 onClick = {
                     if (!isDrinkSizeInvalid(drinkSize)) {
-                        onConfirm(drinkSize.toDouble())
+                        onConfirm(drinkSize.toInt())
                     }
                 },
             ) {
@@ -212,8 +213,9 @@ fun DrinkInputDialog(
 
 
 fun isDrinkSizeInvalid(drinkSize: String): Boolean {
+    println(drinkSize)
     return try {
-        drinkSize.toDouble()
+        drinkSize.toInt()
         false
     } catch (e: NumberFormatException) {
         true

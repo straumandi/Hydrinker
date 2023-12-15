@@ -46,27 +46,27 @@ fun BottomNavigationBar() {
     val entries = listOf(
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-01")!!,
-            amount = 200.0
+            amountInMillilitres = 200
         ),
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
-            amount = 300.0
+            amountInMillilitres = 300
         ),
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
-            amount = 150.0
+            amountInMillilitres = 150
         ),
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-04")!!,
-            amount = 250.0
+            amountInMillilitres = 250
         ),
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-05")!!,
-            amount = 350.0
+            amountInMillilitres = 350
         ),
         HydrationData(
             date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-06")!!,
-            amount = 250.0
+            amountInMillilitres = 250
         )
     )
 

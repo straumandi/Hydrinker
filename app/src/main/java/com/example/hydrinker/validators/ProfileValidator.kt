@@ -14,7 +14,7 @@ class ProfileValidator {
             dailyGoal.isNotEmpty() && dailyGoal.toDoubleOrNull() != null
 
         fun validateDrinkSize(drinkSize: String): Boolean =
-            drinkSize.isNotEmpty() && drinkSize.toDoubleOrNull() != null
+            drinkSize.isNotEmpty() && drinkSize.toIntOrNull() != null
 
     }
 }

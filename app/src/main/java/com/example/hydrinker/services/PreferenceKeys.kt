@@ -9,8 +9,8 @@ object PreferencesKeys {
     val NAME = stringPreferencesKey("name")
     val WEIGHT = doublePreferencesKey("weight")
     val AGE = intPreferencesKey("age")
-    val DAILY_GOAL = doublePreferencesKey("dailyGoal")
-    val DRINK_SIZE = doublePreferencesKey("drinkSize")
+    val DAILY_GOAL = intPreferencesKey("dailyGoal")
+    val DRINK_SIZE = intPreferencesKey("drinkSize")
     val NOTIFICATIONS_ON = booleanPreferencesKey("notificationsOn")
     val UNITS = stringPreferencesKey("units")
 }

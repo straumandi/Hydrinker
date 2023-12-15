@@ -5,8 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [HydrationData::class], version = 1)
+@Database(entities = [HydrationData::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class HydrinkerDatabase : RoomDatabase() {
     abstract fun hydrationDao(): HydrationDao
@@ -20,10 +22,35 @@ abstract class HydrinkerDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext, HydrinkerDatabase::class.java, "hydration_database"
-                ).build()
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
     }
 }
+
+val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE hydration_data RENAME TO temp_hydration_data")
+        db.execSQL(
+            """
+            CREATE TABLE hydration_data (
+                id INTEGER PRIMARY KEY NOT NULL,
+                date INTEGER NOT NULL,
+                amountInMillilitres INTEGER NOT NULL
+            )
+        """.trimIndent()
+        )
+        db.execSQL(
+            """
+            INSERT INTO hydration_data (id, date, amountInMillilitres)
+            SELECT id, date, CAST(amount AS INTEGER) FROM temp_hydration_data
+        """.trimIndent()
+        )
+        db.execSQL("DROP TABLE temp_hydration_data")
+    }
+}
+

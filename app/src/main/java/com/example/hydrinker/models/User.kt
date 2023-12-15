@@ -8,7 +8,7 @@ data class User(
     val age: Int,
     val weight: Double,
     val activityLevel: ActivityLevel,
-    val dailyWaterGoal: Double,
+    val dailyWaterGoal: Int,
     val notificationsEnabled: Boolean,
     val units: MeasurementUnit,
     // Add more optional fields for advanced settings if needed
