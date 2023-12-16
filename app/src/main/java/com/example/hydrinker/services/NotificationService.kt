@@ -18,8 +18,8 @@ class NotificationService(private val context: Context) {
     // TODO: REPLACE WITH MORE APPEALING INFO
     fun showBasicNotification() {
         val notification = NotificationCompat.Builder(context, "water_notification")
-            .setContentTitle("Water Reminder")
-            .setContentText("Time to drink a glass of water")
+            .setContentTitle("Hydration Reminder")
+            .setContentText("Keep your hydration level up and stay focused. 💧")
             .setSmallIcon(R.drawable.water_drop)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setAutoCancel(true)

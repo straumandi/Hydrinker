@@ -61,13 +61,13 @@ fun HistoryScreen(navController: NavController, context: Context = LocalContext.
     ScreenHeader(headerText = "History")
     Card(
         modifier = Modifier
-            .padding(8.dp, 60.dp, 24.dp, 128.dp) ,// start - top - end - bottom
+            .padding(4.dp, 60.dp, 8.dp, 128.dp) ,// start - top - end - bottom
 
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
     ) {
-        Text("Track your past drinking behaviour here:",
+        Text("Check out your drinking behaviour! 💦",
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
@@ -130,7 +130,7 @@ private fun createCustomAxisValueFormatter(customAxisValues: List<Float>): AxisV
 }
 
 private fun createDateFormatAxisValueFormatter(earliestDate: LocalDate): AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d.MM")
 
     return AxisValueFormatter { value, _ ->
         println("Input value for Axis: $value")
