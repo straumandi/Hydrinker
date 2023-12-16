@@ -22,4 +22,11 @@ interface HydrationDao {
 
     @Query("SELECT * FROM hydration_data ORDER BY date DESC")
     fun getAllHydrationData(): LiveData<List<HydrationData>>
-}
+
+    // delete all hydration data
+    @Query("DELETE FROM hydration_data WHERE id > 0")
+    suspend fun deleteAll()
+
+    // get hydration data for the past week
+    @Query("SELECT * FROM hydration_data WHERE date >= :startDate ORDER BY date DESC")
+    fun getLastWeekHydrationData(startDate: Long): LiveData<List<HydrationData>>}

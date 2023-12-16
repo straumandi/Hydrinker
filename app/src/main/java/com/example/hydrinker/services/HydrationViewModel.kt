@@ -8,8 +8,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hydrinker.database.HydrationData
 import com.example.hydrinker.database.HydrinkerDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
+import kotlin.random.Random
 
 class HydrationViewModel(val context: Context) : ViewModel() {
     private val hydrinkerDatabase = HydrinkerDatabase.getDatabase(context)
@@ -32,6 +35,35 @@ class HydrationViewModel(val context: Context) : ViewModel() {
 
     fun getHydrationData(): LiveData<List<HydrationData>> {
         return hydrinkerDatabase.hydrationDao().getAllHydrationData()
+    }
+
+    fun getLastWeekHydrationData(): LiveData<List<HydrationData>> {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7)
+        val startDate = calendar.timeInMillis
+        return hydrinkerDatabase.hydrationDao().getLastWeekHydrationData(startDate)
+    }
+
+    fun seedDataForPastWeek() {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteAllHydrationData()
+
+            val calendar = Calendar.getInstance()
+            for (i in 1..7) {
+                calendar.time = Date()
+                calendar.add(Calendar.DAY_OF_YEAR, -i)
+                val randomDrinkSize = Random.nextInt(200, 3000) // Random drink size
+                val hydrationData = HydrationData(
+                    date = calendar.time,
+                    amountInMillilitres = randomDrinkSize
+                )
+                hydrinkerDatabase.hydrationDao().insert(hydrationData)
+            }
+        }
+    }
+
+    private suspend fun deleteAllHydrationData() {
+        hydrinkerDatabase.hydrationDao().deleteAll()
     }
 }
 

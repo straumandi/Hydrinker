@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -33,9 +34,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.models.MeasurementUnit
+import com.example.hydrinker.services.HydrationViewModel
+import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.SettingsService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +52,8 @@ fun SettingsScreen(
     navController: NavController,
     context: Context = LocalContext.current
 ) {
+    val hydrationViewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
+
     var uiState by remember { mutableStateOf(SettingsUiState()) }
     val settingsService = SettingsService(context.dataStore, context)
 
@@ -73,6 +79,25 @@ fun SettingsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(40.dp)
         ) {
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                // Small button for seeding data
+                Button(
+                    onClick = { hydrationViewModel.seedDataForPastWeek() },
+                    modifier = Modifier
+                        .size(width = 80.dp, height = 32.dp)
+                        .padding(top = 4.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFFE0E0E0))
+                ) {
+                    Text("Seed", fontSize = 12.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             CustomStyledSwitch(
                 checked = uiState.notificationsOn,
                 onCheckedChange = {

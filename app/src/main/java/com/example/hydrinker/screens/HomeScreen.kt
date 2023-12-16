@@ -29,13 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.hydrinker.R
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
@@ -43,16 +41,19 @@ import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
 
 @Composable
-fun HomeScreen(navController: NavController, context: Context = LocalContext.current) {
+fun HomeScreen(
+    navController: NavController,
+    context: Context = LocalContext.current
+) {
     var showDialog by remember { mutableStateOf(false) }
     var defaultDrinkSize by remember { mutableStateOf("") }
     val profileService = ProfileService(context.dataStore)
 
-    val hydrationViewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
+    val hydrationViewModel: HydrationViewModel =
+        viewModel(factory = HydrationViewModelFactory(context))
 
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
-        hydrationViewModel.getHydrationData()
     }
 
     if (showDialog) {
@@ -81,7 +82,12 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
         ) {
             // Profile Button top left
             IconButton(modifier = Modifier.size(120.dp, 120.dp), onClick = {
-                navController.navigate("profile_route")
+                navController.navigate("profile_route") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
             }) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_profile),
@@ -94,8 +100,13 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
                 .size(120.dp, 120.dp)
                 .align(Alignment.CenterVertically),
                 onClick = {
-                    navController.navigate("score_route")
-                }) {
+                    navController.navigate("settings_route") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    }
+                },) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_menu),
                     contentDescription = "A menu button",
@@ -112,9 +123,15 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             modifier = Modifier
                 .size(300.dp, 300.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = { },
-
-            ) {
+            onClick = {
+                navController.navigate("score_route") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
+            }
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_home_score),
                 contentDescription = "Big Blue Button",
@@ -163,8 +180,8 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
                 modifier = Modifier
                     .size(50.dp, 50.dp),
                 onClick = {
-                showDialog = true
-            }) {
+                    showDialog = true
+                }) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_addcstm),
                     contentDescription = "Plus Button",
@@ -175,19 +192,6 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
 
 
     }
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFbddbe3,
-    device = Devices.DEFAULT,
-    widthDp = 360,
-    heightDp = 640
-)
-fun HomeScreenPreview() {
-    val navController = rememberNavController()
-    HomeScreen(navController)
 }
 
 @Composable

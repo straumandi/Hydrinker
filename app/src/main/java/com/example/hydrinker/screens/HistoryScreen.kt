@@ -32,7 +32,6 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -42,17 +41,19 @@ import java.time.temporal.ChronoUnit
 fun HistoryScreen(navController: NavController, context: Context = LocalContext.current) {
     val hydrationViewModel: HydrationViewModel =
         viewModel(factory = HydrationViewModelFactory(context))
-    val hydrationDataList by hydrationViewModel.getHydrationData()
+    val hydrationDataList by hydrationViewModel.getLastWeekHydrationData()
         .observeAsState(initial = emptyList())
 
+    val earliestDate = remember { mutableStateOf(LocalDate.now()) }
     val chartModelProducer = remember { ChartEntryModelProducer() }
 
     LaunchedEffect(key1 = hydrationDataList) {
-        val formattedEntries = getFormattedEntries(hydrationDataList)
-        if (formattedEntries.isEmpty()) {
-            println("Formatted entries list is empty. Skipping chart update.")
-        } else {
-            println("Formatted Entries: $formattedEntries")
+        if (hydrationDataList.isNotEmpty()) {
+            println("hydrationDataList: $hydrationDataList")
+            earliestDate.value = hydrationDataList.minOf {
+                it.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            }
+            val formattedEntries = getFormattedEntries(hydrationDataList, earliestDate.value)
             chartModelProducer.setEntries(formattedEntries)
         }
     }
@@ -79,7 +80,7 @@ fun HistoryScreen(navController: NavController, context: Context = LocalContext.
             chart = lineChart(),
             chartModelProducer = chartModelProducer,
             startAxis = createStartAxis(),
-            bottomAxis = rememberBottomAxis(valueFormatter = createDateFormatAxisValueFormatter()),
+            bottomAxis = rememberBottomAxis(valueFormatter = createDateFormatAxisValueFormatter(earliestDate = earliestDate.value)),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
@@ -88,11 +89,7 @@ fun HistoryScreen(navController: NavController, context: Context = LocalContext.
 }
 
 
-private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
-    // Use the current date as the reference date
-    val referenceDate = LocalDate.now()
-
-    // Use a map to accumulate amounts for each date
+private fun getFormattedEntries(entries: List<HydrationData>, earliestDate: LocalDate): List<FloatEntry> {
     val accumulatedAmounts = mutableMapOf<LocalDate, Float>()
 
     entries.forEach { entry ->
@@ -100,20 +97,15 @@ private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> 
         accumulatedAmounts[parsedDate] = (accumulatedAmounts[parsedDate] ?: 0f) + entry.amountInMillilitres.toFloat()
     }
 
-    // Sort the map entries by date to ensure correct order
-    val sortedEntries = accumulatedAmounts.entries.sortedBy { it.key }
-    println("sortedEntries: $sortedEntries")
-    return sortedEntries.flatMap { (parsedDate, accumulatedAmount) ->
-        listOf(
-            entryOf(
-                    x = (referenceDate.toEpochDay() - parsedDate.toEpochDay()).toFloat(),
-                    y = accumulatedAmount
-
-            )
+    // Calculate the x value as the number of days from the earliest date
+    return accumulatedAmounts.map { (parsedDate, accumulatedAmount) ->
+        val daysSinceEarliest = ChronoUnit.DAYS.between(parsedDate, earliestDate).toFloat()
+        entryOf(
+            x = daysSinceEarliest,
+            y = accumulatedAmount
         )
-    }
+    }.sortedBy { it.x }
 }
-
 
 
 @Composable
@@ -137,21 +129,19 @@ private fun createCustomAxisValueFormatter(customAxisValues: List<Float>): AxisV
     }
 }
 
-private fun createDateFormatAxisValueFormatter(): AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
+private fun createDateFormatAxisValueFormatter(earliestDate: LocalDate): AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
 
     return AxisValueFormatter { value, _ ->
-        // Log the input value for debugging
         println("Input value for Axis: $value")
 
-        // Convert the value back to LocalDate and format it using the specified pattern
         val epochDay = value.toLong()
-        val date = LocalDate.ofEpochDay(epochDay)
+        val date = earliestDate.plusDays(value.toLong())
+
         println("epochDay $epochDay")
         println("date $date")
-        // Log the formatted date for debugging
-        println("Formatted date for Axis: ${date.format(dateTimeFormatter)}")
 
+        println("Formatted date for Axis: ${date.format(dateTimeFormatter)}")
         date.format(dateTimeFormatter)
     }
 }
