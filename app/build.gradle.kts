@@ -68,6 +68,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:2.6.2")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
     kapt("androidx.room:room-compiler:2.6.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

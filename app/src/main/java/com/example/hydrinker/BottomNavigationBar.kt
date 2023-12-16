@@ -42,34 +42,6 @@ fun BottomNavigationBar() {
      */
     val navController = rememberNavController()
 
-    // Sample entries data, replace this with actual drinking entry data
-    val entries = listOf(
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-01")!!,
-            amountInMillilitres = 200
-        ),
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
-            amountInMillilitres = 300
-        ),
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-02")!!,
-            amountInMillilitres = 150
-        ),
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-04")!!,
-            amountInMillilitres = 250
-        ),
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-05")!!,
-            amountInMillilitres = 350
-        ),
-        HydrationData(
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse("2022-07-06")!!,
-            amountInMillilitres = 250
-        )
-    )
-
     // scaffold to hold our bottom navigation Bar
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -135,7 +107,7 @@ fun BottomNavigationBar() {
                 ScoreScreen(navController = navController)
             }
             composable(Screens.History.route) {
-                HistoryScreen(navController = navController, entries = entries)
+                HistoryScreen(navController = navController)
             }
             composable(Screens.Settings.route) {
                 SettingsScreen(navController = navController)

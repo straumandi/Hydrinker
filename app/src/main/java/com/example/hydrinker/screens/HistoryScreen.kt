@@ -1,4 +1,6 @@
 package com.example.hydrinker.screens
+
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -11,7 +13,12 @@ import androidx.compose.ui.unit.dp
 import com.example.hydrinker.database.HydrationData
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.hydrinker.services.HydrationViewModel
+import com.example.hydrinker.services.HydrationViewModelFactory
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -23,18 +30,25 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 @Composable
-fun HistoryScreen(navController: NavController, entries: List<HydrationData>) {
+fun HistoryScreen(navController: NavController, context: Context = LocalContext.current) {
+    val hydrationViewModel: HydrationViewModel =
+        viewModel(factory = HydrationViewModelFactory(context))
+    val hydrationDataList by hydrationViewModel.getHydrationData()
+        .observeAsState(initial = emptyList())
 
     val chartModelProducer = remember { ChartEntryModelProducer() }
 
-    LaunchedEffect(entries) {
-        // update ChartEntryModelProducer when entries change
-        chartModelProducer.setEntries(getFormattedEntries(entries))
+    LaunchedEffect(key1 = hydrationDataList) {
+        println(hydrationDataList)
+        chartModelProducer.setEntries(getFormattedEntries(hydrationDataList))
     }
 
     Column(
@@ -57,30 +71,6 @@ fun HistoryScreen(navController: NavController, entries: List<HydrationData>) {
     }
 }
 
-// Helper function to format the entries for ChartEntryModelProducer
-private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
-    val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
-
-    // Use a map to accumulate amounts for each date
-    val accumulatedAmounts = mutableMapOf<Long, Float>()
-
-    entries.forEach { entry ->
-        val day = TimeUnit.MILLISECONDS.toDays(entry.date.time - referenceDate)
-        accumulatedAmounts[day] = (accumulatedAmounts[day] ?: 0f) + entry.amountInMillilitres.toFloat()
-    }
-
-    return accumulatedAmounts.map { (day, accumulatedAmount) ->
-        entryOf(
-            x = day.toFloat(), // X-axis represents the date in days
-            y = accumulatedAmount, // Y-axis represents the accumulated water amount
-        )
-    }
-}
-
-/*
-* here is the code for the new date format from our database
-* we will probably need a state in here to update the ui when the local db has changes
-*
 private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
     val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
     val referenceDay = LocalDate.ofEpochDay(referenceDate / (24 * 60 * 60 * 1000)).toEpochDay()
@@ -103,9 +93,6 @@ private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> 
         )
     }
 }
-*/
-
-
 
 @Composable
 private fun createStartAxis(): AxisRenderer<AxisPosition.Vertical.Start> {

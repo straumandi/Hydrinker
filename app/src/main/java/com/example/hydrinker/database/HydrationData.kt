@@ -1,5 +1,6 @@
 package com.example.hydrinker.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -20,5 +21,5 @@ interface HydrationDao {
     suspend fun insert(hydrationData: HydrationData)
 
     @Query("SELECT * FROM hydration_data ORDER BY date DESC")
-    fun getAllHydrationData(): List<HydrationData>
+    fun getAllHydrationData(): LiveData<List<HydrationData>>
 }
