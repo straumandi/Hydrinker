@@ -1,7 +1,6 @@
 package com.example.hydrinker.screens
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,11 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.hydrinker.database.HydrationData
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -31,11 +34,9 @@ import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 
 @Composable
 fun HistoryScreen(navController: NavController, context: Context = LocalContext.current) {
@@ -47,15 +48,30 @@ fun HistoryScreen(navController: NavController, context: Context = LocalContext.
     val chartModelProducer = remember { ChartEntryModelProducer() }
 
     LaunchedEffect(key1 = hydrationDataList) {
-        println(hydrationDataList)
-        chartModelProducer.setEntries(getFormattedEntries(hydrationDataList))
+        val formattedEntries = getFormattedEntries(hydrationDataList)
+        if (formattedEntries.isEmpty()) {
+            println("Formatted entries list is empty. Skipping chart update.")
+        } else {
+            println("Formatted Entries: $formattedEntries")
+            chartModelProducer.setEntries(formattedEntries)
+        }
     }
 
-    Column(
+    ScreenHeader(headerText = "History")
+    Card(
         modifier = Modifier
-            .padding(8.dp, 16.dp, 24.dp, 248.dp) // start - top - end - bottom
+            .padding(8.dp, 60.dp, 24.dp, 128.dp) ,// start - top - end - bottom
+
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
     ) {
-        Text("History", style = MaterialTheme.typography.titleLarge)
+        Text("Track your past drinking behaviour here:",
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            style = MaterialTheme.typography.titleMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Vico LineChart with dynamic data using ChartEntryModelProducer
@@ -66,33 +82,39 @@ fun HistoryScreen(navController: NavController, context: Context = LocalContext.
             bottomAxis = rememberBottomAxis(valueFormatter = createDateFormatAxisValueFormatter()),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(16.dp)
         )
     }
 }
 
+
 private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
-    val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
-    val referenceDay = LocalDate.ofEpochDay(referenceDate / (24 * 60 * 60 * 1000)).toEpochDay()
+    // Use the current date as the reference date
+    val referenceDate = LocalDate.now()
 
     // Use a map to accumulate amounts for each date
     val accumulatedAmounts = mutableMapOf<LocalDate, Float>()
 
-    // Parse the date string from the HydrationData object using DateTimeFormatter
-    val dateTimeFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
     entries.forEach { entry ->
-        val parsedDate: LocalDate = LocalDateTime.parse(entry.date.toString(), dateTimeFormatter).toLocalDate()
-
+        val parsedDate: LocalDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
         accumulatedAmounts[parsedDate] = (accumulatedAmounts[parsedDate] ?: 0f) + entry.amountInMillilitres.toFloat()
     }
 
-    return accumulatedAmounts.map { (parsedDate, accumulatedAmount) ->
-        entryOf(
-            x = ChronoUnit.DAYS.between(LocalDate.ofEpochDay(referenceDay), parsedDate).toFloat(),
-            y = accumulatedAmount
+    // Sort the map entries by date to ensure correct order
+    val sortedEntries = accumulatedAmounts.entries.sortedBy { it.key }
+    println("sortedEntries: $sortedEntries")
+    return sortedEntries.flatMap { (parsedDate, accumulatedAmount) ->
+        listOf(
+            entryOf(
+                    x = (referenceDate.toEpochDay() - parsedDate.toEpochDay()).toFloat(),
+                    y = accumulatedAmount
+
+            )
         )
     }
 }
+
+
 
 @Composable
 private fun createStartAxis(): AxisRenderer<AxisPosition.Vertical.Start> {
@@ -119,17 +141,18 @@ private fun createDateFormatAxisValueFormatter(): AxisValueFormatter<AxisPositio
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
 
     return AxisValueFormatter { value, _ ->
+        // Log the input value for debugging
+        println("Input value for Axis: $value")
+
         // Convert the value back to LocalDate and format it using the specified pattern
-        val date = Instant.ofEpochMilli(value.toLong())
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
+        val epochDay = value.toLong()
+        val date = LocalDate.ofEpochDay(epochDay)
+        println("epochDay $epochDay")
+        println("date $date")
+        // Log the formatted date for debugging
+        println("Formatted date for Axis: ${date.format(dateTimeFormatter)}")
 
         date.format(dateTimeFormatter)
     }
 }
-
-
-
-
-
 

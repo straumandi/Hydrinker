@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -36,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.R
+import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
@@ -59,17 +61,23 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             showDialog = false
         })
     }
-
+    Row(
+        modifier = Modifier.padding(bottom = 8.dp)
+    ) {
+        ScreenHeader(headerText = "Hydrinker")
+    }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             // Profile Button top left
             IconButton(modifier = Modifier.size(120.dp, 120.dp), onClick = {
@@ -110,7 +118,8 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
             Image(
                 painter = painterResource(id = R.drawable.btn_home_score),
                 contentDescription = "Big Blue Button",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             )
             Column {
                 Text(
@@ -132,33 +141,38 @@ fun HomeScreen(navController: NavController, context: Context = LocalContext.cur
 
 
         //Cup standard button bottom middle
-        IconButton(modifier = Modifier
-            .size(120.dp, 120.dp)
-            .align(Alignment.CenterHorizontally),
-            onClick = {
-                if (!isDrinkSizeInvalid(defaultDrinkSize)) {
-                    hydrationViewModel.addDrink(defaultDrinkSize.toInt())
-                } else {
-                    showDialog = true
-                }
+        Row {
+            IconButton(modifier = Modifier
+                .size(120.dp, 120.dp),
+                onClick = {
+                    if (!isDrinkSizeInvalid(defaultDrinkSize)) {
+                        hydrationViewModel.addDrink(defaultDrinkSize.toInt())
+                    } else {
+                        showDialog = true
+                    }
+                }) {
+                Image(
+                    painter = painterResource(id = R.drawable.btn_home_addsrd),
+                    contentDescription = "Standard drink size button",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            Spacer(modifier = Modifier.height(0.dp))
+            //Cup custom button bottom middle
+            IconButton(
+                modifier = Modifier
+                    .size(50.dp, 50.dp),
+                onClick = {
+                showDialog = true
             }) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_home_addsrd),
-                contentDescription = "Standard drink size button",
-                modifier = Modifier.fillMaxWidth()
-            )
+                Image(
+                    painter = painterResource(id = R.drawable.btn_home_addcstm),
+                    contentDescription = "Plus Button",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 
-        //Cup custom button bottom middle
-        IconButton(modifier = Modifier.size(50.dp, 50.dp), onClick = {
-            showDialog = true
-        }) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_home_addcstm),
-                contentDescription = "Plus Button",
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
 
     }
 }
