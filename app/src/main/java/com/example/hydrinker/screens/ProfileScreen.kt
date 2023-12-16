@@ -159,14 +159,14 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             value = uiState.dailyGoal,
             onValueChange = { uiState = uiState.copy(dailyGoal = it) },
             label = { Text("Daily Goal") },
-            trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
+            trailingIcon = { Text("ml", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
             isError = !uiState.isDailyGoalValid,
             supportingText = {
                 if (!uiState.isDailyGoalValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Enter your daily goal in liters",
+                        text = "Enter your daily goal in milliliters",
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -187,14 +187,14 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             value = uiState.drinkSize,
             onValueChange = { uiState = uiState.copy(drinkSize = it) },
             label = { Text("Default Drink Size") },
-            trailingIcon = { Text("l", style = MaterialTheme.typography.bodySmall) },
+            trailingIcon = { Text("ml", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
             isError = !uiState.isDrinkSizeValid,
             supportingText = {
                 if (!uiState.isDrinkSizeValid) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Enter your preferred drink size in liters",
+                        text = "Enter your preferred drink size in milliliters",
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -228,8 +228,8 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                                 name = uiState.name.text,
                                 weight = uiState.weight.text.toDouble(),
                                 age = uiState.age.text.toInt(),
-                                dailyGoal = uiState.dailyGoal.text.toDouble(),
-                                drinkSize = uiState.drinkSize.text.toDouble()
+                                dailyGoal = uiState.dailyGoal.text.toInt(),
+                                drinkSize = uiState.drinkSize.text.toInt()
                             )
                         )
                         delay(1500) // delay for testing purposes
@@ -293,8 +293,8 @@ data class ProfileData(
     val name: String,
     val weight: Double,
     val age: Int,
-    val dailyGoal: Double,
-    val drinkSize: Double
+    val dailyGoal: Int,
+    val drinkSize: Int
 )
 
 

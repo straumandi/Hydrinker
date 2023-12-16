@@ -1,5 +1,6 @@
 package com.example.hydrinker.screens
-import androidx.compose.foundation.layout.Column
+
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -8,10 +9,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.hydrinker.models.HydrationData
+import com.example.hydrinker.database.HydrationData
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.hydrinker.headers.ScreenHeader
+import com.example.hydrinker.services.HydrationViewModel
+import com.example.hydrinker.services.HydrationViewModelFactory
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -22,26 +32,47 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
-import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
+import java.time.temporal.ChronoUnit
 
 @Composable
-fun HistoryScreen(navController: NavController, entries: List<HydrationData>) {
+fun HistoryScreen(navController: NavController, context: Context = LocalContext.current) {
+    val hydrationViewModel: HydrationViewModel =
+        viewModel(factory = HydrationViewModelFactory(context))
+    val hydrationDataList by hydrationViewModel.getLastWeekHydrationData()
+        .observeAsState(initial = emptyList())
 
+    val earliestDate = remember { mutableStateOf(LocalDate.now()) }
     val chartModelProducer = remember { ChartEntryModelProducer() }
 
-    LaunchedEffect(entries) {
-        // update ChartEntryModelProducer when entries change
-        chartModelProducer.setEntries(getFormattedEntries(entries))
+    LaunchedEffect(key1 = hydrationDataList) {
+        if (hydrationDataList.isNotEmpty()) {
+            println("hydrationDataList: $hydrationDataList")
+            earliestDate.value = hydrationDataList.minOf {
+                it.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            }
+            val formattedEntries = getFormattedEntries(hydrationDataList, earliestDate.value)
+            chartModelProducer.setEntries(formattedEntries)
+        }
     }
 
-    Column(
+    ScreenHeader(headerText = "History")
+    Card(
         modifier = Modifier
-            .padding(8.dp, 16.dp, 24.dp, 248.dp) // start - top - end - bottom
+            .padding(4.dp, 60.dp, 8.dp, 128.dp) ,// start - top - end - bottom
+
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
     ) {
-        Text("History", style = MaterialTheme.typography.titleLarge)
+        Text("Check out your drinking behaviour! 💦",
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            style = MaterialTheme.typography.titleMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Vico LineChart with dynamic data using ChartEntryModelProducer
@@ -49,32 +80,31 @@ fun HistoryScreen(navController: NavController, entries: List<HydrationData>) {
             chart = lineChart(),
             chartModelProducer = chartModelProducer,
             startAxis = createStartAxis(),
-            bottomAxis = rememberBottomAxis(valueFormatter = createDateFormatAxisValueFormatter()),
+            bottomAxis = rememberBottomAxis(valueFormatter = createDateFormatAxisValueFormatter(earliestDate = earliestDate.value)),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(16.dp)
         )
     }
 }
 
-// Helper function to format the entries for ChartEntryModelProducer
-private fun getFormattedEntries(entries: List<HydrationData>): List<FloatEntry> {
-    val referenceDate = entries.minOfOrNull { it.date.time } ?: 0L
 
-    // Use a map to accumulate amounts for each date
-    val accumulatedAmounts = mutableMapOf<Long, Float>()
+private fun getFormattedEntries(entries: List<HydrationData>, earliestDate: LocalDate): List<FloatEntry> {
+    val accumulatedAmounts = mutableMapOf<LocalDate, Float>()
 
     entries.forEach { entry ->
-        val day = TimeUnit.MILLISECONDS.toDays(entry.date.time - referenceDate)
-        accumulatedAmounts[day] = (accumulatedAmounts[day] ?: 0f) + entry.amount.toFloat()
+        val parsedDate: LocalDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        accumulatedAmounts[parsedDate] = (accumulatedAmounts[parsedDate] ?: 0f) + entry.amountInMillilitres.toFloat()
     }
 
-    return accumulatedAmounts.map { (day, accumulatedAmount) ->
+    // Calculate the x value as the number of days from the earliest date
+    return accumulatedAmounts.map { (parsedDate, accumulatedAmount) ->
+        val daysSinceEarliest = ChronoUnit.DAYS.between(parsedDate, earliestDate).toFloat()
         entryOf(
-            x = day.toFloat(), // X-axis represents the date in days
-            y = accumulatedAmount, // Y-axis represents the accumulated water amount
+            x = daysSinceEarliest,
+            y = accumulatedAmount
         )
-    }
+    }.sortedBy { it.x }
 }
 
 
@@ -99,21 +129,20 @@ private fun createCustomAxisValueFormatter(customAxisValues: List<Float>): AxisV
     }
 }
 
-private fun createDateFormatAxisValueFormatter(): AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
+private fun createDateFormatAxisValueFormatter(earliestDate: LocalDate): AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d.MM")
 
     return AxisValueFormatter { value, _ ->
-        // Convert the value back to LocalDate and format it using the specified pattern
-        val date = Instant.ofEpochMilli(value.toLong())
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
+        println("Input value for Axis: $value")
 
+        val epochDay = value.toLong()
+        val date = earliestDate.plusDays(value.toLong())
+
+        println("epochDay $epochDay")
+        println("date $date")
+
+        println("Formatted date for Axis: ${date.format(dateTimeFormatter)}")
         date.format(dateTimeFormatter)
     }
 }
-
-
-
-
-
 

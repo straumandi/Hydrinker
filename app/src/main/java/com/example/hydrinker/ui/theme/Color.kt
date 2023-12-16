@@ -2,10 +2,11 @@ package com.example.hydrinker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PalePink80 = Color(0xFFf9e9e1)
+val PalePink40 = Color(0xFFc9c5bf)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Lavender80 = Color(0xFFe0e0f0)
+val Lavender40 = Color(0xFFd1d1df)
+
+val LightBlue80 = Color(0xFFb2dfff)
+val LightBlue40 = Color(0xFF8cbbff)
