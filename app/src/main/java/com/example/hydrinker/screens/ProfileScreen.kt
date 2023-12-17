@@ -2,17 +2,24 @@ package com.example.hydrinker.screens
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TextFieldDefaults.colors
+import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
+import androidx.compose.material3.TextFieldDefaults.shape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -44,6 +52,7 @@ import kotlinx.coroutines.withContext
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, context: Context = LocalContext.current) {
     // 'remember' is a Compose function to retain state across recompositions
@@ -82,7 +91,13 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             onValueChange = { uiState = uiState.copy(name = it) },
             label = { Text("Name") },
             singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF84D0FB),
+                    unfocusedBorderColor = Color(0xFF004FAB)
+            ),
+
             isError = !uiState.isNameValid,
+
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -108,6 +123,10 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             onValueChange = { uiState = uiState.copy(weight = it) }, label = { Text("Weight") },
             trailingIcon = { Text("kg", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF84D0FB),
+                unfocusedBorderColor = Color(0xFF004FAB)
+            ),
             isError = !uiState.isWeightValid,
             supportingText = {
                 if (!uiState.isWeightValid) {
@@ -135,6 +154,10 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             onValueChange = { uiState = uiState.copy(age = it) }, label = { Text("Age") },
             singleLine = true,
             isError = !uiState.isAgeValid,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF84D0FB),
+                unfocusedBorderColor = Color(0xFF004FAB)
+            ),
             supportingText = {
                 if (!uiState.isAgeValid) {
                     Text(
@@ -161,6 +184,10 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             label = { Text("Daily Goal") },
             trailingIcon = { Text("ml", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF84D0FB),
+                unfocusedBorderColor = Color(0xFF004FAB)
+            ),
             isError = !uiState.isDailyGoalValid,
             supportingText = {
                 if (!uiState.isDailyGoalValid) {
@@ -189,6 +216,10 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             label = { Text("Default Drink Size") },
             trailingIcon = { Text("ml", style = MaterialTheme.typography.bodySmall) },
             singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF84D0FB),
+                unfocusedBorderColor = Color(0xFF004FAB)
+            ),
             isError = !uiState.isDrinkSizeValid,
             supportingText = {
                 if (!uiState.isDrinkSizeValid) {
