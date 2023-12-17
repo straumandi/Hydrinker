@@ -99,8 +99,8 @@ fun ScoreScreen(navController: NavController, context: Context = LocalContext.cu
                 )
                 Column {
                     Text(
-                        //format to two decimal places
-                        text = String.format("%.2f%%", score),
+                        //format to 0 decimal places
+                        text = score.toString().substringBefore(".") + "%",
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         color = Color.Black,
                         fontSize = 48.sp,

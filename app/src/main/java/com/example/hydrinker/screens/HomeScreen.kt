@@ -183,8 +183,7 @@ fun HomeScreen(
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
                 Text(
-                    //format to two decimal places and add a percent to the end of the string
-                    text = String.format("%.2f%%", score),
+                    text = score.toString().substringBefore(".") + "%",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
                     fontSize = 64.sp,
