@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -51,6 +52,19 @@ import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.ui.theme.HydrinkerTheme
 @Composable
 fun ScoreScreen(navController: NavController) {
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFD3F7FF))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bg_history),
+            contentDescription = "home_bg",
+            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
+        )
+    }
 
     Row(
         modifier = Modifier.padding(bottom = 8.dp)

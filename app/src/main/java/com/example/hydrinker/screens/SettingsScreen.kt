@@ -2,6 +2,7 @@ package com.example.hydrinker.screens
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,11 +33,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.hydrinker.R
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.models.MeasurementUnit
 import com.example.hydrinker.services.HydrationViewModel
@@ -63,6 +66,18 @@ fun SettingsScreen(
         uiState = SettingsUiState(
             notificationsOn = existingProfile.notificationsOn,
             units = existingProfile.units
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFD3F7FF))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bg_score),
+            contentDescription = "home_bg",
+            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
         )
     }
 

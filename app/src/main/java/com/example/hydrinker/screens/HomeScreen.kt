@@ -2,7 +2,9 @@ package com.example.hydrinker.screens
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -62,6 +65,20 @@ fun HomeScreen(
             showDialog = false
         })
     }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFD3F7FF))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bg_home),
+            contentDescription = "home_bg",
+            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
+            )
+    }
+
     Row(
         modifier = Modifier.padding(bottom = 8.dp)
     ) {
@@ -192,6 +209,7 @@ fun HomeScreen(
 
 
     }
+
 }
 
 @Composable

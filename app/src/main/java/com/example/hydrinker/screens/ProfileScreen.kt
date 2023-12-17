@@ -2,8 +2,11 @@ package com.example.hydrinker.screens
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,10 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +46,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.hydrinker.R
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.ProfileService
 import com.example.hydrinker.validators.ProfileValidator
@@ -78,6 +84,18 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
     }
 
     // These are various composables that are used to build the screen
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFD3F7FF))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bg_history),
+            contentDescription = "home_bg",
+            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
+        )
+    }
+
     ScreenHeader(headerText = "Profile")
     Column(
         modifier = Modifier
