@@ -29,4 +29,9 @@ interface HydrationDao {
 
     // get hydration data for the past week
     @Query("SELECT * FROM hydration_data WHERE date >= :startDate ORDER BY date DESC")
-    fun getLastWeekHydrationData(startDate: Long): LiveData<List<HydrationData>>}
+    fun getLastWeekHydrationData(startDate: Long): LiveData<List<HydrationData>>
+
+    @Query("SELECT * FROM hydration_data WHERE date >= :start AND date <= :end")
+    fun getHydrationDataForDateRange(start: Long, end: Long): LiveData<List<HydrationData>>
+}
+

@@ -1,5 +1,6 @@
 package com.example.hydrinker.screens
 
+import ScoreService
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +44,8 @@ import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
+import kotlinx.coroutines.launch
+import java.util.Date
 
 @Composable
 fun HomeScreen(
@@ -55,13 +59,23 @@ fun HomeScreen(
     val hydrationViewModel: HydrationViewModel =
         viewModel(factory = HydrationViewModelFactory(context))
 
+    val scoreService = ScoreService(context, hydrationViewModel)
+    var score by remember { mutableStateOf(0.0) }
+
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
+        score = scoreService.calculateDailyScore(Date())
     }
 
     if (showDialog) {
         DrinkInputDialog(onDismissRequest = { showDialog = false }, onConfirm = { size ->
-            hydrationViewModel.addDrink(size)
+            hydrationViewModel.addDrink(size).invokeOnCompletion {
+                coroutineScope.launch {
+                    score = scoreService.calculateDailyScore(Date())
+                }
+            }
             showDialog = false
         })
     }
@@ -75,8 +89,11 @@ fun HomeScreen(
         Image(
             painter = painterResource(id = R.drawable.bg_home),
             contentDescription = "home_bg",
-            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
-            )
+            modifier = Modifier
+                .scale(1.8f)
+                .align(Alignment.TopStart)
+                .fillMaxSize()
+        )
     }
 
     Row(
@@ -113,9 +130,10 @@ fun HomeScreen(
                 )
             }
             // Menu Button top right
-            IconButton(modifier = Modifier
-                .size(120.dp, 120.dp)
-                .align(Alignment.CenterVertically),
+            IconButton(
+                modifier = Modifier
+                    .size(120.dp, 120.dp)
+                    .align(Alignment.CenterVertically),
                 onClick = {
                     navController.navigate("settings_route") {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -123,7 +141,8 @@ fun HomeScreen(
                         }
                         launchSingleTop = true
                     }
-                },) {
+                },
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_menu),
                     contentDescription = "A menu button",
@@ -158,16 +177,16 @@ fun HomeScreen(
             Column {
                 Text(
                     text = "Score",
-                    modifier = Modifier.align(Alignment.Start),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
                     fontSize = 42.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
                 Text(
-                    text = "69",
-                    modifier = Modifier.align(Alignment.End),
+                    text = score.toString().substringBefore(".") + "%",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
-                    fontSize = 84.sp,
+                    fontSize = 64.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
             }
@@ -180,7 +199,10 @@ fun HomeScreen(
                 .size(120.dp, 120.dp),
                 onClick = {
                     if (!isDrinkSizeInvalid(defaultDrinkSize)) {
-                        hydrationViewModel.addDrink(defaultDrinkSize.toInt())
+                        hydrationViewModel.addDrink(defaultDrinkSize.toInt()).invokeOnCompletion {
+                            coroutineScope.launch {
+                                score = scoreService.calculateDailyScore(Date())
+                            }                        }
                     } else {
                         showDialog = true
                     }
@@ -206,8 +228,6 @@ fun HomeScreen(
                 )
             }
         }
-
-
     }
 
 }
