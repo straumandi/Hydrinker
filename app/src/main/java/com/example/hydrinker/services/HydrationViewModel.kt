@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hydrinker.database.HydrationData
 import com.example.hydrinker.database.HydrinkerDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -17,8 +18,8 @@ import kotlin.random.Random
 class HydrationViewModel(val context: Context) : ViewModel() {
     private val hydrinkerDatabase = HydrinkerDatabase.getDatabase(context)
 
-    fun addDrink(drinkSize: Int) {
-        viewModelScope.launch {
+    fun addDrink(drinkSize: Int): Job {
+        return viewModelScope.launch {
             sendDrinkSizeToDatabase(drinkSize, hydrinkerDatabase)
         }
     }
@@ -31,10 +32,6 @@ class HydrationViewModel(val context: Context) : ViewModel() {
         database.hydrationDao().insert(hydrationData)
 
         Toast.makeText(context, "${hydrationData.amountInMillilitres}ml was tracked!", Toast.LENGTH_SHORT).show()
-    }
-
-    fun getHydrationData(): LiveData<List<HydrationData>> {
-        return hydrinkerDatabase.hydrationDao().getAllHydrationData()
     }
 
     fun getLastWeekHydrationData(): LiveData<List<HydrationData>> {
@@ -64,6 +61,24 @@ class HydrationViewModel(val context: Context) : ViewModel() {
 
     private suspend fun deleteAllHydrationData() {
         hydrinkerDatabase.hydrationDao().deleteAll()
+    }
+
+    fun getHydrationDataForDate(date: Date): LiveData<List<HydrationData>> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val dayStart = calendar.timeInMillis
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        val dayEnd = calendar.timeInMillis
+
+        return hydrinkerDatabase.hydrationDao().getHydrationDataForDateRange(dayStart, dayEnd)
     }
 }
 
