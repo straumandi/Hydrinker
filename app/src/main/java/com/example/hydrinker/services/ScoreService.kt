@@ -21,6 +21,6 @@ class ScoreService(context: Context, val hydrationViewModel: HydrationViewModel)
             score = (totalDrinkAmount.toDouble() / dailyGoal) * 100
         }
 
-        return score
+        return if (score > 100) 100.0 else score
     }
 }
