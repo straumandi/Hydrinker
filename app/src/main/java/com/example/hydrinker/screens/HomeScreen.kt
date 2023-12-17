@@ -1,5 +1,6 @@
 package com.example.hydrinker.screens
 
+import ScoreService
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +43,7 @@ import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
+import java.util.Date
 
 @Composable
 fun HomeScreen(
@@ -55,8 +57,12 @@ fun HomeScreen(
     val hydrationViewModel: HydrationViewModel =
         viewModel(factory = HydrationViewModelFactory(context))
 
+    val scoreService = ScoreService(context, hydrationViewModel)
+    var score by remember { mutableStateOf(0.0) }
+
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
+        score = scoreService.calculateDailyScore(Date())
     }
 
     if (showDialog) {
@@ -75,8 +81,11 @@ fun HomeScreen(
         Image(
             painter = painterResource(id = R.drawable.bg_home),
             contentDescription = "home_bg",
-            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
-            )
+            modifier = Modifier
+                .scale(1.8f)
+                .align(Alignment.TopStart)
+                .fillMaxSize()
+        )
     }
 
     Row(
@@ -113,9 +122,10 @@ fun HomeScreen(
                 )
             }
             // Menu Button top right
-            IconButton(modifier = Modifier
-                .size(120.dp, 120.dp)
-                .align(Alignment.CenterVertically),
+            IconButton(
+                modifier = Modifier
+                    .size(120.dp, 120.dp)
+                    .align(Alignment.CenterVertically),
                 onClick = {
                     navController.navigate("settings_route") {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -123,7 +133,8 @@ fun HomeScreen(
                         }
                         launchSingleTop = true
                     }
-                },) {
+                },
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_home_menu),
                     contentDescription = "A menu button",
@@ -158,14 +169,15 @@ fun HomeScreen(
             Column {
                 Text(
                     text = "Score",
-                    modifier = Modifier.align(Alignment.Start),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
                     fontSize = 42.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
                 Text(
-                    text = "69",
-                    modifier = Modifier.align(Alignment.End),
+                    //format to two decimal places and add a percent to the end of the string
+                    text = String.format("%.2f%%", score),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
                     fontSize = 84.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
