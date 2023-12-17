@@ -104,6 +104,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        // Textfield: Name
         OutlinedTextField(
             value = uiState.name,
             onValueChange = { uiState = uiState.copy(name = it) },
@@ -118,7 +119,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF))
+                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF).copy(alpha = 0.9f))
                 .onFocusChanged { focusState ->
                     if (nameFocused && !focusState.isFocused && !focusState.isFocused) {
                         uiState =
@@ -136,6 +137,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                 }
             }
         )
+        // Textfield: Weight
         OutlinedTextField(
             value = uiState.weight,
             onValueChange = { uiState = uiState.copy(weight = it) }, label = { Text("Weight") },
@@ -159,7 +161,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF))
+                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF).copy(alpha = 0.9f))
                 .onFocusChanged { focusState ->
                     if (weightFocused && !focusState.isFocused && !focusState.isFocused) {
                         uiState =
@@ -168,6 +170,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                     weightFocused = focusState.isFocused
                 },
         )
+        // Textfield: Age
         OutlinedTextField(
             value = uiState.age,
             onValueChange = { uiState = uiState.copy(age = it) }, label = { Text("Age") },
@@ -189,7 +192,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF))
+                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF).copy(alpha = 0.9f))
                 .onFocusChanged { focusState ->
                     if (ageFocused && !focusState.isFocused && !focusState.isFocused) {
                         uiState =
@@ -198,6 +201,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                     ageFocused = focusState.isFocused
                 },
         )
+        // Textfield: Daily Goal
         OutlinedTextField(
             value = uiState.dailyGoal,
             onValueChange = { uiState = uiState.copy(dailyGoal = it) },
@@ -221,7 +225,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF))
+                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF).copy(alpha = 0.9f))
                 .onFocusChanged { focusState ->
                     if (dailyGoalFocused && !focusState.isFocused && !focusState.isFocused) {
                         uiState = uiState.copy(
@@ -231,6 +235,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
                     dailyGoalFocused = focusState.isFocused
                 },
         )
+        // Textfield: Default Drink Size
         OutlinedTextField(
             value = uiState.drinkSize,
             onValueChange = { uiState = uiState.copy(drinkSize = it) },
@@ -254,7 +259,7 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF))
+                .padding(vertical = 8.dp).background(color = Color(0xFFD3F7FF).copy(alpha = 0.9f))
                 .onFocusChanged { focusState ->
                     if (defaultSizeFocused && !focusState.isFocused && !focusState.isFocused) {
                         uiState = uiState.copy(
