@@ -43,6 +43,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -94,7 +95,7 @@ fun ScoreScreen(navController: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_score),
-                    contentDescription = "Big Blue Button",
+                    contentDescription = "btn_score_score",
                     modifier = Modifier
                         .size(200.dp)
                 )
@@ -120,7 +121,7 @@ fun ScoreScreen(navController: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_streak),
-                    contentDescription = "Big Blue Button",
+                    contentDescription = "btn_score_streak",
                     modifier = Modifier
                         .size(200.dp)
                 )
@@ -146,7 +147,7 @@ fun ScoreScreen(navController: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_tier),
-                    contentDescription = "Big Blue Button",
+                    contentDescription = "btn_score_tier",
                     modifier = Modifier
                         .size(200.dp)
                 )
