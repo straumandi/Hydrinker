@@ -76,14 +76,7 @@ fun ScoreScreen(navController: NavController) {
                 modifier = Modifier
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {
-                    navController.navigate("score_route") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
-                }
+                onClick = {/* TODO */}
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_score),
@@ -109,14 +102,7 @@ fun ScoreScreen(navController: NavController) {
                 modifier = Modifier
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {
-                    navController.navigate("score_route") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
-                }
+                onClick = {/* TODO */}
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_streak),
@@ -142,14 +128,7 @@ fun ScoreScreen(navController: NavController) {
                 modifier = Modifier
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {
-                    navController.navigate("score_route") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
-                }
+                onClick = {/* TODO */}
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.btn_tier),
