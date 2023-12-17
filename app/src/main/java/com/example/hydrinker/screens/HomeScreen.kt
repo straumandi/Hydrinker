@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.ProfileService
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @Composable
@@ -60,6 +62,8 @@ fun HomeScreen(
     val scoreService = ScoreService(context, hydrationViewModel)
     var score by remember { mutableStateOf(0.0) }
 
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = Unit) {
         defaultDrinkSize = profileService.readProfile().drinkSize.toString()
         score = scoreService.calculateDailyScore(Date())
@@ -67,7 +71,11 @@ fun HomeScreen(
 
     if (showDialog) {
         DrinkInputDialog(onDismissRequest = { showDialog = false }, onConfirm = { size ->
-            hydrationViewModel.addDrink(size)
+            hydrationViewModel.addDrink(size).invokeOnCompletion {
+                coroutineScope.launch {
+                    score = scoreService.calculateDailyScore(Date())
+                }
+            }
             showDialog = false
         })
     }
@@ -179,7 +187,7 @@ fun HomeScreen(
                     text = String.format("%.2f%%", score),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Black,
-                    fontSize = 84.sp,
+                    fontSize = 64.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
             }
@@ -192,7 +200,10 @@ fun HomeScreen(
                 .size(120.dp, 120.dp),
                 onClick = {
                     if (!isDrinkSizeInvalid(defaultDrinkSize)) {
-                        hydrationViewModel.addDrink(defaultDrinkSize.toInt())
+                        hydrationViewModel.addDrink(defaultDrinkSize.toInt()).invokeOnCompletion {
+                            coroutineScope.launch {
+                                score = scoreService.calculateDailyScore(Date())
+                            }                        }
                     } else {
                         showDialog = true
                     }
@@ -218,8 +229,6 @@ fun HomeScreen(
                 )
             }
         }
-
-
     }
 
 }

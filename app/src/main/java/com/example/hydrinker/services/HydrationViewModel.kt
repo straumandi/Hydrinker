@@ -3,14 +3,13 @@ package com.example.hydrinker.services
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hydrinker.database.HydrationData
 import com.example.hydrinker.database.HydrinkerDatabase
-import com.example.hydrinker.screens.dataStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -19,8 +18,8 @@ import kotlin.random.Random
 class HydrationViewModel(val context: Context) : ViewModel() {
     private val hydrinkerDatabase = HydrinkerDatabase.getDatabase(context)
 
-    fun addDrink(drinkSize: Int) {
-        viewModelScope.launch {
+    fun addDrink(drinkSize: Int): Job {
+        return viewModelScope.launch {
             sendDrinkSizeToDatabase(drinkSize, hydrinkerDatabase)
         }
     }
