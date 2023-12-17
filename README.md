@@ -2,8 +2,8 @@
 
 ## Idee
 - ***Name:*** Hydrinker
-- ***Konzept:*** Trink-App in welcher man sich mit freunden vergleichen.
-- ***USP:*** Simples Sesign, leichte Bedienung, gute Übersicht
+- ***Konzept:*** Trink-App in welcher man sich mit freunden vergleichen kann.
+- ***USP:*** Simples Design, leichte Bedienung, gute Übersicht
 ## Kontrollfragen
 1. ***Welches Problem wird durch Ihre App gelöst?***
    2. A: Es wird ein Anreiz, mittels Motivator in Form eines Scores, geschaffen. Dieser Score kann mit Freunden verglichen werden und dadurch einen Anlass zum Wasser trinken geben.
