@@ -1,4 +1,7 @@
 package com.example.hydrinker.screens
+
+import ScoreService
+import android.content.Context
 import android.webkit.WebSettings.TextSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -40,22 +43,42 @@ import androidx.navigation.NavController
 import androidx.compose.ui.graphics.Color
 
 import androidx.compose.material3.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.Screens
+import com.example.hydrinker.services.HydrationViewModel
+import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.ui.theme.HydrinkerTheme
+import java.util.Date
+
 @Composable
-fun ScoreScreen(navController: NavController) {
+fun ScoreScreen(navController: NavController, context: Context = LocalContext.current) {
+    val hydrationViewModel: HydrationViewModel =
+        viewModel(factory = HydrationViewModelFactory(context))
+    val scoreService = ScoreService(context, hydrationViewModel)
+    var score by remember { mutableStateOf(0.0) }
+
+    LaunchedEffect(key1 = Unit) {
+        score = scoreService.calculateDailyScore(Date())
+        println(score)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp, vertical = 15.dp)
     ) {
         // Profile button at the top left
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
+        Button(modifier = Modifier.size(80.dp, 80.dp),
             border = BorderStroke(1.dp, color = Color(0xFF000000)),
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 30.dp
@@ -65,8 +88,7 @@ fun ScoreScreen(navController: NavController) {
                 contentColor = Color(0xFF000000),
             ),
             shape = CircleShape,
-            onClick = {}
-        ) {
+            onClick = {}) {
             Image(
                 painter = painterResource(id = R.drawable.btn_tier),
                 contentDescription = "Testing",
@@ -75,8 +97,7 @@ fun ScoreScreen(navController: NavController) {
         }
 
 
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
+        Button(modifier = Modifier.size(80.dp, 80.dp),
             border = BorderStroke(1.dp, color = Color(0xFF000000)),
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 30.dp
@@ -86,8 +107,7 @@ fun ScoreScreen(navController: NavController) {
                 contentColor = Color(0xFF000000),
             ),
             shape = CircleShape,
-            onClick = {}
-        ) {
+            onClick = {}) {
             Image(
                 painter = painterResource(id = R.drawable.btn_score),
                 contentDescription = "Testing",
@@ -96,8 +116,7 @@ fun ScoreScreen(navController: NavController) {
 
         }
 
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
+        Button(modifier = Modifier.size(80.dp, 80.dp),
             border = BorderStroke(1.dp, color = Color(0xFF000000)),
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 30.dp
@@ -107,8 +126,7 @@ fun ScoreScreen(navController: NavController) {
                 contentColor = Color(0xFF000000),
             ),
             shape = CircleShape,
-            onClick = {}
-        ) {
+            onClick = {}) {
             Image(
                 painter = painterResource(id = R.drawable.btn_streak),
                 contentDescription = "Testing",
