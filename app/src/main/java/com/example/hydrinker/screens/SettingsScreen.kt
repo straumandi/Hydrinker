@@ -31,7 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,6 +48,7 @@ import com.example.hydrinker.models.MeasurementUnit
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.SettingsService
+import com.patrykandpatrick.vico.core.component.text.HorizontalPosition
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -124,10 +127,15 @@ fun SettingsScreen(
             Row (
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .background(
+                    color = Color(0xFF84D0FB).copy(alpha = 0.95f),
+                    shape = RoundedCornerShape(25.dp)
+                    )
+                    .padding(12.dp).fillMaxWidth()
             ) {
                 Text(
                     text = "Notifications",
-
                     color = Color.Black,
                     fontSize = 40.sp,
                 )
@@ -149,7 +157,14 @@ fun SettingsScreen(
 
             Row (
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .background(
+                        color = Color(0xFF84D0FB).copy(alpha = 0.95f),
+                        shape = RoundedCornerShape(25.dp)
+                    )
+                    .padding(12.dp)
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = uiState.units.name,
@@ -159,6 +174,7 @@ fun SettingsScreen(
                 )
 
                 Switch(
+
                     checked = uiState.units == MeasurementUnit.METRIC,
                     onCheckedChange = {
                         uiState =
@@ -170,7 +186,6 @@ fun SettingsScreen(
                         uncheckedThumbColor = Color(0xFF484C51),
                         uncheckedTrackColor = Color(0xFFFF6D6D).copy(alpha = 0.8f),
                     ),
-                    modifier = Modifier.padding(start = 16.dp)
 
                 )
             }
