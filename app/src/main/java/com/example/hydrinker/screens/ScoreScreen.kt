@@ -51,12 +51,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.Screens
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
+import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.ui.theme.HydrinkerTheme
 import java.util.Date
 
@@ -72,70 +77,116 @@ fun ScoreScreen(navController: NavController, context: Context = LocalContext.cu
         println(score)
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp, vertical = 15.dp)
+            .background(color = Color(0xFFD3F7FF))
     ) {
-        // Profile button at the top left
-        Button(modifier = Modifier.size(80.dp, 80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_tier),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Image(
+            painter = painterResource(id = R.drawable.bg_history),
+            contentDescription = "home_bg",
+            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
+        )
+    }
 
+    Row(
+        modifier = Modifier.padding(bottom = 8.dp)
+    ) {
+        ScreenHeader(headerText = "Score")
+    }
 
-        Button(modifier = Modifier.size(80.dp, 80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_score),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
-            )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 60.dp, start = 15.dp, end = 15.dp)
+    ){
 
-        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 15.dp, vertical = 15.dp)
+        ) {
+            // Profile button at the top left
 
-        Button(modifier = Modifier.size(80.dp, 80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_streak),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
-            )
+            // Score
+            IconButton(
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {/* TODO */}
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.btn_score),
+                    contentDescription = "btn_score_score",
+                    modifier = Modifier
+                        .size(200.dp)
+                )
+                Column {
+                    Text(
+                        text = "69",
+                        modifier = Modifier.align(Alignment.End),
+                        color = Color.Black,
+                        fontSize = 84.sp,
+                    )
+                }
+            }
 
+            // Add a Spacer for vertical separation
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Streak
+            IconButton(
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {/* TODO */}
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.btn_streak),
+                    contentDescription = "btn_score_streak",
+                    modifier = Modifier
+                        .size(200.dp)
+                )
+                Column {
+                    Text(
+                        text = "3x",
+                        modifier = Modifier.align(Alignment.End),
+                        color = Color.Black,
+                        fontSize = 84.sp,
+                    )
+                }
+            }
+
+            // Add another Spacer for vertical separation
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Tier
+            IconButton(
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {/* TODO */}
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.btn_tier),
+                    contentDescription = "btn_score_tier",
+                    modifier = Modifier
+                        .size(200.dp)
+                )
+                Column {
+                    Text(
+                        text = "River",
+                        modifier = Modifier.align(Alignment.Start),
+                        color = Color.Black,
+                        fontSize = 42.sp,
+                    )
+                }
+            }
         }
 
     }
+
+
 
 }
 
