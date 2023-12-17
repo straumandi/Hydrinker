@@ -65,7 +65,9 @@ fun SettingsScreen(
         )
     }
 
-    ScreenHeader(headerText = "Settings")
+    ScreenHeader(
+        headerText = "Settings"
+    )
 
     Box(
         modifier = Modifier
