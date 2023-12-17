@@ -43,6 +43,8 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.Screens
 import com.example.hydrinker.ui.theme.HydrinkerTheme
@@ -54,70 +56,104 @@ fun ScoreScreen(navController: NavController) {
             .padding(horizontal = 15.dp, vertical = 15.dp)
     ) {
         // Profile button at the top left
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_tier),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
 
-
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}
+        // Score
+        IconButton(
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                navController.navigate("score_route") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
+            }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_score),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
+                contentDescription = "Big Blue Button",
+                modifier = Modifier
+                    .size(200.dp)
             )
-
+            Column {
+                Text(
+                    text = "69",
+                    modifier = Modifier.align(Alignment.End),
+                    color = Color.Black,
+                    fontSize = 84.sp,
+                )
+            }
         }
 
-        Button(
-            modifier = Modifier.size(80.dp,80.dp),
-            border = BorderStroke(1.dp, color = Color(0xFF000000)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 30.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF98E0FF),
-                contentColor = Color(0xFF000000),
-            ),
-            shape = CircleShape,
-            onClick = {}
+        // Add a Spacer for vertical separation
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Streak
+        IconButton(
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                navController.navigate("score_route") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
+            }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.btn_streak),
-                contentDescription = "Testing",
-                modifier = Modifier.fillMaxWidth()
+                contentDescription = "Big Blue Button",
+                modifier = Modifier
+                    .size(200.dp)
             )
-
+            Column {
+                Text(
+                    text = "3x",
+                    modifier = Modifier.align(Alignment.End),
+                    color = Color.Black,
+                    fontSize = 84.sp,
+                )
+            }
         }
 
+        // Add another Spacer for vertical separation
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Tier
+        IconButton(
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                navController.navigate("score_route") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
+            }
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.btn_tier),
+                contentDescription = "Big Blue Button",
+                modifier = Modifier
+                    .size(200.dp)
+            )
+            Column {
+                Text(
+                    text = "River",
+                    modifier = Modifier.align(Alignment.Start),
+                    color = Color.Black,
+                    fontSize = 42.sp,
+                )
+            }
+        }
     }
+
 
 }
 
