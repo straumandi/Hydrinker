@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,6 +46,7 @@ import com.example.hydrinker.models.MeasurementUnit
 import com.example.hydrinker.services.HydrationViewModel
 import com.example.hydrinker.services.HydrationViewModelFactory
 import com.example.hydrinker.services.SettingsService
+import com.patrykandpatrick.vico.core.component.text.textComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -77,7 +79,10 @@ fun SettingsScreen(
         Image(
             painter = painterResource(id = R.drawable.bg_score),
             contentDescription = "home_bg",
-            modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
+            modifier = Modifier
+                .scale(1.8f)
+                .align(Alignment.TopStart)
+                .fillMaxSize()
         )
     }
 
@@ -116,22 +121,59 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CustomStyledSwitch(
-                checked = uiState.notificationsOn,
-                onCheckedChange = {
-                    uiState = uiState.copy(notificationsOn = it)
-                },
-                text = "Notifications"
-            )
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround,
+            ) {
+                Text(
+                    text = "Notifications",
 
-            CustomStyledSwitch(
-                checked = uiState.units == MeasurementUnit.METRIC,
-                onCheckedChange = {
-                    uiState =
-                        uiState.copy(units = if (it) MeasurementUnit.METRIC else MeasurementUnit.IMPERIAL)
-                },
-                text = uiState.units.name
-            )
+                    color = Color.Black,
+                    fontSize = 40.sp,
+                )
+                Switch(
+                    checked = uiState.notificationsOn,
+                    onCheckedChange = {
+                        uiState = uiState.copy(notificationsOn = it)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFFFFFFFF),
+                        checkedTrackColor = Color(0xFF0BFF8A).copy(alpha = 0.8f),
+                        uncheckedThumbColor = Color(0xFF484C51),
+                        uncheckedTrackColor = Color(0xFFFF6D6D).copy(alpha = 0.8f),
+                    ),
+                    modifier = Modifier.padding(start = 16.dp)
+
+                )
+            }
+
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround,
+            ) {
+                Text(
+                    text = uiState.units.name,
+
+                    color = Color.Black,
+                    fontSize = 40.sp,
+                )
+
+                Switch(
+                    checked = uiState.units == MeasurementUnit.METRIC,
+                    onCheckedChange = {
+                        uiState =
+                            uiState.copy(units = if (it) MeasurementUnit.METRIC else MeasurementUnit.IMPERIAL)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFFFFFFFF),
+                        checkedTrackColor = Color(0xFF0BFF8A).copy(alpha = 0.8f),
+                        uncheckedThumbColor = Color(0xFF484C51),
+                        uncheckedTrackColor = Color(0xFFFF6D6D).copy(alpha = 0.8f),
+                    ),
+                    modifier = Modifier.padding(start = 16.dp)
+
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f)) // This will push everything below to the bottom
 

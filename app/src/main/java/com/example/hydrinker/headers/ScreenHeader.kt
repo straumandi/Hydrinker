@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -22,14 +23,14 @@ fun ScreenHeader(headerText: String) {
             .padding(start = 48.dp, end = 48.dp)
             .height(50.dp)
             .shadow(elevation = 6.dp, shape = RoundedCornerShape(bottomEnd = 96.dp, bottomStart = 96.dp)),
-        color = MaterialTheme.colorScheme.primary,
+        color = Color(0xFF002948),
         shape = RoundedCornerShape(bottomEnd = 96.dp, bottomStart = 96.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = headerText,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = Color(0xFFECECEC),
             )
         }
     }
