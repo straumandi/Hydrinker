@@ -15,6 +15,5 @@ class ProfileValidator {
 
         fun validateDrinkSize(drinkSize: String): Boolean =
             drinkSize.isNotEmpty() && drinkSize.toIntOrNull() != null
-
     }
 }

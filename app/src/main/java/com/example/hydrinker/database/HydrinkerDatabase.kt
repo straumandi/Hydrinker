@@ -76,4 +76,3 @@ val MIGRATION_2_3: Migration = object : Migration(2, 3) {
         db.execSQL("DROP TABLE temp_hydration_data")
     }
 }
-

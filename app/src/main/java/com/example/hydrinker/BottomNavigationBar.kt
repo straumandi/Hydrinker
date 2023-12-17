@@ -32,15 +32,14 @@ import com.example.hydrinker.screens.SettingsScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavigationBar() {
+
     // initializing the default selected item
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
 
-    /**
-     * by using the rememberNavController()
-     * we can get the instance of the navController
-     */
+    // by using the rememberNavController()
+    // we can get the instance of the navController
     val navController = rememberNavController()
 
     LaunchedEffect(navController) {
@@ -66,12 +65,11 @@ fun BottomNavigationBar() {
                     .forEachIndexed { index, navigationItem ->
                         NavigationBarItem(
                             // if our current index of the itemList is equal to the index of navigationItem
-                            // then set it to selected = true
+                            // then set selected = true
                             selected = index == selectedItemIndex,
                             label = {
                                 Text(navigationItem.title)
                             },
-                            //alwaysShowLabel = false, --> shows only the label for the selected item
                             icon = {
                                 BadgedBox(
                                     badge = {

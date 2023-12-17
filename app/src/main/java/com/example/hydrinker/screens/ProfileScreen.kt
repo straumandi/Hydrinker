@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,9 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TextFieldDefaults.colors
-import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
-import androidx.compose.material3.TextFieldDefaults.shape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,20 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.R
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.ProfileService
@@ -61,6 +53,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "us
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, context: Context = LocalContext.current) {
+
     // 'remember' is a Compose function to retain state across recompositions
     var uiState by remember { mutableStateOf(ProfileUiState()) }
     val profileService = ProfileService(context.dataStore)
@@ -95,7 +88,6 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             modifier = Modifier.scale(1.8f).align(Alignment.TopStart).fillMaxSize()
         )
     }
-
     ScreenHeader(headerText = "Profile")
     Column(
         modifier = Modifier
@@ -354,17 +346,3 @@ data class ProfileData(
     val dailyGoal: Int,
     val drinkSize: Int
 )
-
-
-@Composable
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFbddbe3,
-    device = Devices.DEFAULT,
-    widthDp = 360,
-    heightDp = 640
-)
-fun ProfileScreenPreview() {
-    val navController = rememberNavController()
-    ProfileScreen(navController)
-}

@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.hydrinker.database.HydrationData
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
@@ -135,7 +134,7 @@ private fun createStartAxis(): AxisRenderer<AxisPosition.Vertical.Start> {
     return rememberStartAxis(
         valueFormatter = createCustomAxisValueFormatter(customAxisValues),
     ).apply {
-        // Customize other properties as needed
+        // Customize other properties here
         // For example, you can set custom label formatting, ticks, etc.
     }
 }
@@ -165,4 +164,3 @@ private fun createDateFormatAxisValueFormatter(earliestDate: LocalDate): AxisVal
         date.format(dateTimeFormatter)
     }
 }
-

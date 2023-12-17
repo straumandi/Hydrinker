@@ -63,7 +63,8 @@ fun SettingsScreen(
     navController: NavController,
     context: Context = LocalContext.current
 ) {
-    val hydrationViewModel: HydrationViewModel = viewModel(factory = HydrationViewModelFactory(context))
+    val hydrationViewModel: HydrationViewModel =
+        viewModel(factory = HydrationViewModelFactory(context))
 
     var uiState by remember { mutableStateOf(SettingsUiState()) }
     val settingsService = SettingsService(context.dataStore, context)
@@ -126,7 +127,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
@@ -135,7 +136,8 @@ fun SettingsScreen(
                     .background(
                         color = Color(0xFF84D0FB).copy(alpha = 0.95f),
                         shape = RoundedCornerShape(25.dp)
-                    ).padding(12.dp)
+                    )
+                    .padding(12.dp)
 
             ) {
                 Text(
@@ -159,7 +161,7 @@ fun SettingsScreen(
                 )
             }
 
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
@@ -168,7 +170,8 @@ fun SettingsScreen(
                     .background(
                         color = Color(0xFF84D0FB).copy(alpha = 0.95f),
                         shape = RoundedCornerShape(25.dp)
-                    ).padding(12.dp)
+                    )
+                    .padding(12.dp)
 
             ) {
                 Text(
@@ -192,7 +195,7 @@ fun SettingsScreen(
                         uncheckedTrackColor = Color(0xFFFF6D6D).copy(alpha = 0.8f),
                     ),
 
-                )
+                    )
             }
 
             Spacer(modifier = Modifier.weight(1f)) // This will push everything below to the bottom

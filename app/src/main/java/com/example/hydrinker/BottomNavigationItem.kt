@@ -11,10 +11,7 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-
 
 /*
  * A data class is a special type of class
@@ -69,4 +66,3 @@ data class BottomNavigationItem(
         )
     }
 }
-

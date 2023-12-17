@@ -34,4 +34,3 @@ interface HydrationDao {
     @Query("SELECT * FROM hydration_data WHERE date >= :start AND date <= :end")
     fun getHydrationDataForDateRange(start: Long, end: Long): LiveData<List<HydrationData>>
 }
-

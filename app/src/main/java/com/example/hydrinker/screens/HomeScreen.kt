@@ -80,7 +80,6 @@ fun HomeScreen(
         })
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -192,7 +191,6 @@ fun HomeScreen(
             }
         }
 
-
         //Cup standard button bottom middle
         Row {
             IconButton(modifier = Modifier
@@ -278,7 +276,6 @@ fun DrinkInputDialog(
         })
 }
 
-
 fun isDrinkSizeInvalid(drinkSize: String): Boolean {
     return try {
         drinkSize.toInt()
@@ -287,4 +284,3 @@ fun isDrinkSizeInvalid(drinkSize: String): Boolean {
         true
     }
 }
-

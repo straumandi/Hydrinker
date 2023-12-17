@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.hydrinker.services.NotificationService
 import kotlinx.coroutines.launch
 
-
 class Hydrinker : Application() {
     private val dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     private lateinit var notificationService: NotificationService

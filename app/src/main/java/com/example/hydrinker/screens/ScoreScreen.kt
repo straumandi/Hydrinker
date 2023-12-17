@@ -26,13 +26,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.hydrinker.R
 import com.example.hydrinker.headers.ScreenHeader
 import com.example.hydrinker.services.HydrationViewModel
@@ -162,19 +159,4 @@ fun ScoreScreen(navController: NavController, context: Context = LocalContext.cu
         }
 
     }
-
-
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFbddbe3,
-    device = Devices.DEFAULT,
-    widthDp = 360,
-    heightDp = 640
-)
-fun ScoreScreenPreview() {
-    val navController = rememberNavController()
-    ScoreScreen(navController)
 }
